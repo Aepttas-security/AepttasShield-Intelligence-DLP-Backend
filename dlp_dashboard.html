@@ -1,0 +1,3094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AepttasShield Enterprise DLP</title>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #070b1a;
+    color: #eef2ff;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 260px;
+    background: #0a1022;
+    border-right: 1px solid #1d2945;
+    padding: 18px 12px;
+    overflow-y: auto;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px 20px;
+    border-bottom: 1px solid #1d2945;
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#2563eb,#8b5cf6);
+    box-shadow: 0 8px 25px rgba(99,72,255,.3);
+}
+
+.brand-name {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.brand-sub {
+    color: #73819d;
+    font-size: 9px;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.section-title {
+    color: #52627f;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 22px 10px 7px;
+}
+
+.nav-item {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: #8491ac;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    text-align: left;
+    margin-bottom: 2px;
+}
+
+.nav-item:hover {
+    background: #111a31;
+    color: white;
+}
+
+.nav-item.active {
+    background: linear-gradient(
+        90deg,
+        rgba(37,99,235,.25),
+        rgba(124,58,237,.20)
+    );
+    color: white;
+    box-shadow: inset 3px 0 #7c5cff;
+}
+
+.status-box {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    background: #101a31;
+    border: 1px solid #243250;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #22c55e;
+}
+
+.status-title {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.status-text {
+    color: #647391;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 260px;
+    min-height: 100vh;
+}
+
+.topbar {
+    height: 72px;
+    border-bottom: 1px solid #1d2945;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    background: rgba(7,11,26,.85);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.search {
+    width: 350px;
+    background: #0e162a;
+    border: 1px solid #202d49;
+    border-radius: 9px;
+    padding: 10px 13px;
+    color: #697894;
+    display: flex;
+    gap: 9px;
+    align-items: center;
+}
+
+.search input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    width: 100%;
+    font-size: 11px;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-btn {
+    background: #0e162a;
+    border: 1px solid #202d49;
+    color: #94a3bf;
+    border-radius: 9px;
+    padding: 9px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#2563eb,#8b5cf6);
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.user-name {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.user-role {
+    font-size: 8px;
+    color: #697894;
+    margin-top: 3px;
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    padding: 30px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+}
+
+.overline {
+    color: #68789b;
+    font-size: 9px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.page-title {
+    font-size: 26px;
+    margin-top: 5px;
+}
+
+.page-description {
+    color: #72809b;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.actions {
+    display: flex;
+    gap: 9px;
+}
+
+.btn {
+    border: 1px solid #263453;
+    background: #0e162a;
+    color: #9aa8c2;
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-size: 10px;
+}
+
+.btn-primary {
+    border: none;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color: white;
+    box-shadow: 0 8px 25px rgba(86,69,230,.25);
+}
+
+/* ================= KPI ================= */
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.card {
+    background: linear-gradient(145deg,#0e162b,#0b1326);
+    border: 1px solid #1d2945;
+    border-radius: 13px;
+}
+
+.kpi {
+    padding: 17px;
+}
+
+.kpi-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.kpi-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: rgba(37,99,235,.12);
+    color: #60a5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.change {
+    font-size: 9px;
+    padding: 4px 7px;
+    border-radius: 5px;
+}
+
+.up {
+    color: #4ade80;
+    background: rgba(34,197,94,.08);
+}
+
+.down {
+    color: #fb7185;
+    background: rgba(239,68,68,.08);
+}
+
+.kpi-value {
+    font-size: 26px;
+    font-weight: 800;
+    margin-top: 15px;
+}
+
+.kpi-label {
+    color: #72809b;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.progress {
+    height: 3px;
+    background: #17213a;
+    border-radius: 4px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    width: 72%;
+    background: linear-gradient(90deg,#2563eb,#8b5cf6);
+}
+
+/* ================= CHARTS ================= */
+
+.two-column {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.panel {
+    padding: 17px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.panel-title {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.panel-subtitle {
+    color: #687793;
+    font-size: 9px;
+    margin-top: 5px;
+}
+
+canvas {
+    margin-top: 15px;
+    max-height: 260px;
+}
+
+/* ================= EVENTS ================= */
+
+.events {
+    padding: 17px;
+}
+
+.event {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid #19243d;
+}
+
+.event:last-child {
+    border-bottom: none;
+}
+
+.event-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.red {
+    color: #fb7185;
+    background: rgba(239,68,68,.1);
+}
+
+.purple {
+    color: #c084fc;
+    background: rgba(168,85,247,.1);
+}
+
+.blue {
+    color: #60a5fa;
+    background: rgba(59,130,246,.1);
+}
+
+.orange {
+    color: #fb923c;
+    background: rgba(249,115,22,.1);
+}
+
+.event-info {
+    flex: 1;
+}
+
+.event-title {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.event-detail {
+    color: #687793;
+    font-size: 9px;
+    margin-top: 4px;
+}
+
+.badge {
+    font-size: 8px;
+    padding: 4px 7px;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
+.badge-high {
+    color: #fb7185;
+    background: rgba(239,68,68,.1);
+}
+
+.badge-medium {
+    color: #c084fc;
+    background: rgba(168,85,247,.1);
+}
+
+.badge-low {
+    color: #60a5fa;
+    background: rgba(59,130,246,.1);
+}
+
+.time {
+    color: #596780;
+    font-size: 9px;
+    width: 65px;
+    text-align: right;
+}
+
+/* ================= RISK ANALYTICS MODULE ================= */
+
+.module {
+    padding: 28px;
+    min-height: 500px;
+    display: none;
+    align-items: flex-start;
+    justify-content: stretch;
+    text-align: left;
+}
+
+.module.show {
+    display: block;
+}
+
+.risk-module {
+    width: 100%;
+}
+
+.module-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.module-top .module-icon {
+    flex: 0 0 68px;
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(37,99,235,.18), rgba(124,58,237,.2));
+    color: #9180ff;
+}
+
+.module-top h2 {
+    margin: 0;
+}
+
+.module-top p {
+    color: #72809b;
+    font-size: 11px;
+    margin-top: 6px;
+}
+
+.risk-overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.ueba-overview {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.risk-box,
+.risk-section {
+    background: rgba(15,23,42,.55);
+    border: 1px solid rgba(148,163,184,.09);
+    border-radius: 14px;
+}
+
+.risk-box {
+    padding: 17px;
+}
+
+.risk-box span {
+    display: block;
+    color: #72809b;
+    font-size: 10px;
+    margin-bottom: 8px;
+}
+
+.risk-box strong {
+    display: block;
+    font-size: 22px;
+    color: #e5e7eb;
+}
+
+.risk-section {
+    padding: 18px;
+    margin-top: 16px;
+}
+
+.risk-section .panel-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.risk-section .panel-subtitle {
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+#moduleRiskChart {
+    max-height: 300px;
+}
+
+#uebaAnomalyChart {
+    max-height: 300px;
+}
+
+.risk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.risk-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr .8fr;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(30,41,59,.35);
+    color: #aab5c9;
+    font-size: 10px;
+}
+
+.risk-row.risk-grid-6 {
+    grid-template-columns: 1.35fr 1fr 1fr .9fr .9fr .9fr;
+}
+
+.risk-row.risk-grid-7 {
+    grid-template-columns: 1.25fr 1fr 1fr 1fr .8fr .9fr 1fr;
+}
+
+.risk-row.risk-grid-5 {
+    grid-template-columns: 1.35fr 1fr 1fr .9fr .9fr;
+}
+
+.risk-row.risk-grid-4 {
+    grid-template-columns: 1.4fr 1fr 1fr .9fr;
+}
+
+.risk-row.risk-grid-10 {
+    grid-template-columns: 1.3fr .9fr .7fr .8fr .7fr .8fr 1fr 1.1fr .9fr 1.1fr;
+}
+
+.risk-row.risk-grid-11 {
+    grid-template-columns: 1.2fr .9fr .7fr .8fr .7fr .7fr .7fr 1fr 1.1fr 1.2fr 1.1fr;
+}
+
+.risk-row.risk-grid-8 {
+    grid-template-columns: 1.3fr .9fr .7fr .8fr .7fr .8fr .9fr .9fr;
+}
+
+.risk-row.risk-header {
+    background: transparent;
+    color: #687793;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    padding-top: 0;
+    padding-bottom: 5px;
+}
+
+.risk-row strong {
+    display: block;
+    color: #e5e7eb;
+    font-size: 11px;
+}
+
+.risk-row small {
+    display: block;
+    color: #687793;
+    margin-top: 3px;
+}
+
+.risk-alert {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(30,41,59,.35);
+    color: #aab5c9;
+    font-size: 10px;
+}
+
+.risk-alert strong {
+    display: block;
+    color: #fb7185;
+    margin-bottom: 5px;
+}
+
+.risk-factor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.risk-factor {
+    padding: 11px;
+    border-radius: 10px;
+    background: rgba(30,41,59,.35);
+}
+
+.risk-factor span {
+    display: block;
+    color: #72809b;
+    font-size: 9px;
+}
+
+.risk-factor strong {
+    display: block;
+    color: #e5e7eb;
+    font-size: 17px;
+    margin-top: 5px;
+}
+
+/* Weight / supporting marker inside a risk factor card. */
+.risk-factor em {
+    display: block;
+    color: #52627f;
+    font-size: 8px;
+    font-style: normal;
+    margin-top: 5px;
+    letter-spacing: .4px;
+}
+
+.risk-factor.supporting {
+    border: 1px dashed rgba(148,163,184,.16);
+}
+
+/* ================= RULEBOOK DETAILS PANEL ================= */
+
+.detail-open {
+    background: #16203a;
+    border: 1px solid #2b3a5c;
+    color: #9aa8c2;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 8px;
+    font-family: inherit;
+    letter-spacing: .4px;
+}
+
+.detail-open:hover {
+    background: #1e2b4a;
+    color: #e5e7eb;
+}
+
+/* Wide baseline tables keep every column and scroll inside their own card
+   instead of forcing the whole page to scroll horizontally. */
+.risk-list.wide {
+    overflow-x: auto;
+}
+
+.detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: rgba(4,7,18,.78);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+}
+
+.detail-overlay[hidden] {
+    display: none;
+}
+
+.detail-panel {
+    width: 100%;
+    max-width: 860px;
+    padding: 22px 24px 26px;
+}
+
+.detail-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1d2945;
+}
+
+.detail-head h3 {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.detail-head .panel-subtitle {
+    margin-top: 5px;
+}
+
+.detail-close {
+    background: #0e162a;
+    border: 1px solid #263453;
+    color: #9aa8c2;
+    border-radius: 7px;
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.detail-field {
+    padding: 9px 11px;
+    border-radius: 8px;
+    background: rgba(30,41,59,.35);
+    min-width: 0;
+}
+
+.detail-field span {
+    display: block;
+    color: #72809b;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+.detail-field strong {
+    display: block;
+    color: #e5e7eb;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+    overflow-wrap: anywhere;
+}
+
+.detail-field.wide {
+    grid-column: 1 / -1;
+}
+
+/* Correlated transfer chain timeline. */
+.chain {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.chain-step {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: rgba(30,41,59,.35);
+    font-size: 10px;
+    color: #aab5c9;
+    flex-wrap: wrap;
+}
+
+.chain-arrow {
+    color: #52627f;
+    font-size: 9px;
+    text-align: center;
+}
+
+.chain-id {
+    color: #60a5fa;
+    font-weight: 700;
+    min-width: 46px;
+}
+
+.chain-meta {
+    color: #687793;
+    font-size: 9px;
+}
+
+.detail-empty {
+    color: #687793;
+    font-size: 10px;
+    margin-top: 10px;
+}
+
+@media(max-width:750px) {
+    .risk-row.risk-grid-10,
+    .risk-row.risk-grid-11,
+    .risk-row.risk-grid-8 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:750px) {
+    .risk-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .risk-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .risk-row.risk-grid-6,
+    .risk-row.risk-grid-7,
+    .risk-row.risk-grid-5,
+    .risk-row.risk-grid-4,
+    .risk-row.risk-grid-8,
+    .risk-row.risk-grid-10 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .risk-row.risk-header {
+        display: none;
+    }
+
+    .risk-factor-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1100px) {
+    .kpis {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .ueba-overview {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .two-column {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:750px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: .25s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .search {
+        width: 250px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+    }
+
+    .actions {
+        display: none;
+    }
+}
+
+@media(max-width:550px) {
+
+    .kpis {
+        grid-template-columns: 1fr;
+    }
+
+    .ueba-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        padding: 0 15px;
+    }
+
+    .search {
+        width: 180px;
+    }
+
+    .event .badge,
+    .event .time {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">
+            <i data-lucide="shield"></i>
+        </div>
+
+        <div>
+            <div class="brand-name">AepttasShield</div>
+            <div class="brand-sub">Enterprise DLP</div>
+        </div>
+
+    </div>
+
+    <div class="section-title">Security</div>
+
+    <button class="nav-item active" onclick="showDashboard(this)">
+        <i data-lucide="layout-dashboard"></i>
+        Dashboard
+    </button>
+
+    <div class="section-title">Protection</div>
+
+    <button class="nav-item" onclick="showModule(this,'Endpoints','monitor')">
+        <i data-lucide="monitor"></i>
+        Endpoints
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'GenAI / LLM Guard','brain-circuit')">
+        <i data-lucide="brain-circuit"></i>
+        GenAI / LLM Guard
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Email DLP','mail')">
+        <i data-lucide="mail"></i>
+        Email DLP
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'USB & Removable Media','usb')">
+        <i data-lucide="usb"></i>
+        USB & Removable Media
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Cloud / CASB','cloud')">
+        <i data-lucide="cloud"></i>
+        Cloud / CASB
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Mobile / Android','smartphone')">
+        <i data-lucide="smartphone"></i>
+        Mobile / Android
+    </button>
+
+    <div class="section-title">Data Security</div>
+
+    <button class="nav-item" onclick="showModule(this,'Data Discovery','database')">
+        <i data-lucide="database"></i>
+        Data Discovery
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Data Classification','scan-search')">
+        <i data-lucide="scan-search"></i>
+        Data Classification
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Data Lineage','git-branch')">
+        <i data-lucide="git-branch"></i>
+        Data Lineage
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'OCR','file-key')">
+        <i data-lucide="file-key"></i>
+        OCR
+    </button>
+
+    <div class="section-title">Policy</div>
+
+    <button class="nav-item" onclick="showModule(this,'Policies','shield-check')">
+        <i data-lucide="shield-check"></i>
+        Policies
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Compliance','lock-keyhole')">
+        <i data-lucide="lock-keyhole"></i>
+        Compliance
+    </button>
+
+    <div class="section-title">Incidents</div>
+
+    <button class="nav-item" onclick="showModule(this,'Incidents','alert-triangle')">
+        <i data-lucide="alert-triangle"></i>
+        Incidents
+    </button>
+
+    <div class="section-title">Intelligence</div>
+
+    <button class="nav-item" onclick="showModule(this,'UEBA','users')">
+        <i data-lucide="users"></i>
+        UEBA
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Risk Analytics','activity')">
+        <i data-lucide="activity"></i>
+        Risk Analytics
+    </button>
+
+    <div class="section-title">Administration</div>
+
+    <button class="nav-item" onclick="showModule(this,'Integrations','network')">
+        <i data-lucide="network"></i>
+        Integrations
+    </button>
+
+    <button class="nav-item" onclick="showModule(this,'Settings','settings')">
+        <i data-lucide="settings"></i>
+        Settings
+    </button>
+
+    <div class="status-box">
+        <div class="status">
+            <span class="status-dot"></span>
+            <div>
+                <div class="status-title">Agent Network</div>
+                <div class="status-text">All systems operational</div>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="search">
+
+        <i data-lucide="search"></i>
+
+        <input
+            type="text"
+            placeholder="Search events, users, devices..."
+        >
+
+    </div>
+
+    <div class="top-actions">
+
+        <button class="icon-btn">
+            <i data-lucide="help-circle"></i>
+        </button>
+
+        <button class="icon-btn">
+            <i data-lucide="bell"></i>
+        </button>
+
+        <div class="user">
+
+            <div class="avatar">SD</div>
+
+            <div>
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Security Admin</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<section class="content">
+
+<div class="page-header">
+
+    <div>
+
+        <div class="overline">
+            SECURITY OPERATIONS
+        </div>
+
+        <h1 class="page-title" id="pageTitle">
+            Security Dashboard
+        </h1>
+
+        <p class="page-description">
+            Unified visibility and control across your enterprise data.
+        </p>
+
+    </div>
+
+    <div class="actions">
+
+        <button class="btn">
+            Last 24 hours
+        </button>
+
+        <button class="btn btn-primary">
+            <i data-lucide="activity"></i>
+            Live Monitor
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard">
+
+<div class="kpis">
+
+<div class="card kpi">
+
+    <div class="kpi-top">
+
+        <div class="kpi-icon">
+            <i data-lucide="shield-check"></i>
+        </div>
+
+        <span class="change up">
+            +2.4%
+        </span>
+
+    </div>
+
+    <div class="kpi-value" id="securityPosture">--</div>
+
+    <div class="kpi-label">
+        Security Posture
+    </div>
+
+    <div class="progress"><span id="securityPostureBar" style="width:0%"></span></div>
+
+</div>
+
+
+<div class="card kpi">
+
+    <div class="kpi-top">
+
+        <div class="kpi-icon">
+            <i data-lucide="monitor"></i>
+        </div>
+
+        <span class="change up">
+            +36
+        </span>
+
+    </div>
+
+    <div class="kpi-value" id="protectedEndpoints">--</div>
+
+    <div class="kpi-label">
+        Protected Endpoints
+    </div>
+
+    <div class="progress"><span id="protectedEndpointsBar" style="width:0%"></span></div>
+
+</div>
+
+
+<div class="card kpi">
+
+    <div class="kpi-top">
+
+        <div class="kpi-icon">
+            <i data-lucide="alert-triangle"></i>
+        </div>
+
+        <span class="change up">
+            -12.8%
+        </span>
+
+    </div>
+
+    <div class="kpi-value" id="activeIncidents">--</div>
+
+    <div class="kpi-label">
+        Active Incidents
+    </div>
+
+    <div class="progress"><span id="activeIncidentsBar" style="width:0%"></span></div>
+
+</div>
+
+
+<div class="card kpi">
+
+    <div class="kpi-top">
+
+        <div class="kpi-icon">
+            <i data-lucide="bot"></i>
+        </div>
+
+        <span class="change down">
+            +18.6%
+        </span>
+
+    </div>
+
+    <div class="kpi-value" id="genaiBlocks">--</div>
+
+    <div class="kpi-label">
+        GenAI Blocks
+    </div>
+
+    <div class="progress"><span id="genaiBlocksBar" style="width:0%"></span></div>
+
+</div>
+
+</div>
+
+
+<div class="two-column">
+
+<div class="card panel">
+
+    <div class="panel-header">
+
+        <div>
+            <div class="panel-title">
+                DLP Activity
+            </div>
+
+            <div class="panel-subtitle">
+                Policy violations and enforcement events
+            </div>
+        </div>
+
+    </div>
+
+    <canvas id="activityChart"></canvas>
+
+</div>
+
+
+<div class="card panel">
+
+    <div class="panel-header">
+
+        <div>
+            <div class="panel-title">
+                Risk Distribution
+            </div>
+
+            <div class="panel-subtitle">
+                Current incident severity
+            </div>
+        </div>
+
+    </div>
+
+    <canvas id="riskChart"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="card events" id="recentEvents">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                Recent Security Events
+            </div>
+
+            <div class="panel-subtitle">
+                Real-time policy enforcement activity
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="event-icon red">
+            <i data-lucide="brain-circuit"></i>
+        </div>
+
+        <div class="event-info">
+
+            <div class="event-title">
+                GenAI Data Leakage Prevented
+            </div>
+
+            <div class="event-detail">
+                Sensitive customer records detected in AI prompt
+            </div>
+
+        </div>
+
+        <span class="badge badge-high">
+            HIGH
+        </span>
+
+        <span class="time">
+            2 min ago
+        </span>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="event-icon purple">
+            <i data-lucide="usb"></i>
+        </div>
+
+        <div class="event-info">
+
+            <div class="event-title">
+                Unauthorized USB Transfer
+                </div>
+
+            <div class="event-detail">
+                Restricted files copied to removable media
+            </div>
+
+        </div>
+
+        <span class="badge badge-medium">
+            MEDIUM
+        </span>
+
+        <span class="time">
+            5 min ago
+        </span>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="event-icon blue">
+            <i data-lucide="cloud"></i>
+        </div>
+
+        <div class="event-info">
+
+            <div class="event-title">
+                Cloud Upload Monitored
+            </div>
+
+            <div class="event-detail">
+                Confidential document uploaded to SaaS application
+            </div>
+
+        </div>
+
+        <span class="badge badge-low">
+            LOW
+        </span>
+
+        <span class="time">
+            8 min ago
+        </span>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="event-icon orange">
+            <i data-lucide="mail"></i>
+        </div>
+
+        <div class="event-info">
+
+            <div class="event-title">
+                Outbound Email Blocked
+            </div>
+
+            <div class="event-detail">
+                PCI-DSS payment data detected in attachment
+            </div>
+
+        </div>
+
+        <span class="badge badge-high">
+            HIGH
+        </span>
+
+        <span class="time">
+            11 min ago
+        </span>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- ================= RISK ANALYTICS MODULE ================= -->
+
+<div id="module" class="card module">
+
+    <div id="modulePlaceholder" class="module-placeholder" hidden>
+        <div class="module-top">
+            <div class="module-icon">
+                <i id="placeholderIcon" data-lucide="layers" style="width:38px;height:38px"></i>
+            </div>
+
+            <div>
+                <h2 id="placeholderTitle">Module</h2>
+                <p>This module is ready for its own operational view.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="riskAnalyticsContent" class="risk-module">
+
+        <div class="module-top">
+            <div class="module-icon">
+                <i id="moduleIcon" data-lucide="activity" style="width:38px;height:38px"></i>
+            </div>
+
+            <div>
+                <h2 id="moduleTitle">Risk Analytics</h2>
+                <p>Enterprise risk monitoring and analysis</p>
+            </div>
+        </div>
+
+        <div class="risk-overview">
+            <div class="risk-box">
+                <span>Active Incidents</span>
+                <strong id="raActiveIncidents">--</strong>
+            </div>
+
+            <div class="risk-box">
+                <span>Average Risk</span>
+                <strong id="raAverageRisk">--</strong>
+            </div>
+
+            <div class="risk-box">
+                <span>Maximum Risk</span>
+                <strong id="raMaximumRisk">--</strong>
+            </div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Risk Score Distribution</div>
+            <div class="panel-subtitle">Based on AepttasShield rulebook ranges</div>
+            <canvas id="moduleRiskChart"></canvas>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Latest Risk Factors</div>
+            <div class="panel-subtitle">Calculated factors for the most recent risk score</div>
+            <div id="riskFactorList" class="risk-factor-grid">Loading risk factors...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Enforcement Action Bands</div>
+            <div class="panel-subtitle">Adaptive risk model: score band to enforcement action and L0-L5 level</div>
+            <div id="riskBandList" class="risk-list">Loading enforcement bands...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Department Risk</div>
+            <div id="departmentRiskList" class="risk-list">Loading department risk...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">High-Risk Users</div>
+            <div id="highRiskUserList" class="risk-list">Loading high-risk users...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Recent Risk Alerts</div>
+            <div id="riskAlertList" class="risk-list">Loading risk alerts...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Recent Incidents</div>
+            <div class="panel-subtitle">Active means status OPEN / ACTIVE / IN_PROGRESS / PENDING. Totals count every incident in the dataset.</div>
+            <div id="recentIncidentList" class="risk-list">Loading incidents...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Latest Risk Scores</div>
+            <div class="panel-subtitle">Every scored evaluation. Multiple scores may reference the same incident.</div>
+            <div id="latestScoreList" class="risk-list">Loading risk scores...</div>
+        </div>
+
+    </div>
+
+    <div id="uebaContent" class="risk-module" hidden>
+        <div class="module-top">
+            <div class="module-icon"><i data-lucide="users" style="width:38px;height:38px"></i></div>
+            <div><h2>User and Entity Behavior Analytics</h2><p>Behaviour profiles, anomalies, and adaptive alerts</p></div>
+        </div>
+
+        <div class="ueba-overview">
+            <div class="risk-box"><span>Behaviour Profiles</span><strong id="uebaProfileCount">--</strong></div>
+            <div class="risk-box"><span>Total Anomalies</span><strong id="uebaAnomalyCount">--</strong></div>
+            <div class="risk-box"><span>Anomalous Users</span><strong id="uebaAnomalousUsers">--</strong></div>
+            <div class="risk-box"><span>Critical Anomalies</span><strong id="uebaCriticalCount">--</strong></div>
+            <div class="risk-box"><span>Average Behaviour Score</span><strong id="uebaAverageScore">--</strong></div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Anomaly Severity Distribution</div>
+            <div class="panel-subtitle">Detected behavioural anomalies grouped by severity</div>
+            <canvas id="uebaAnomalyChart"></canvas>
+            <div id="uebaAnomalyChartEmpty" class="panel-subtitle"></div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Recent Behaviour Anomalies</div>
+            <div id="uebaAnomalyList" class="risk-list">Loading UEBA anomalies...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">UEBA Alerts</div>
+            <div id="uebaAlertList" class="risk-list">Loading UEBA alerts...</div>
+        </div>
+
+        <div class="risk-section">
+            <div class="panel-title">Behaviour Profiles</div>
+            <div id="uebaProfileList" class="risk-list wide">Loading behaviour profiles...</div>
+        </div>
+    </div>
+
+</div>
+
+</section>
+</main>
+
+
+<!-- ================= RULEBOOK DETAILS PANEL ================= -->
+
+<div class="detail-overlay" id="detailOverlay" hidden>
+    <div class="card detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+        <div class="detail-head">
+            <div>
+                <h3 id="detailTitle">Details</h3>
+                <div class="panel-subtitle" id="detailSubtitle"></div>
+            </div>
+            <button class="detail-close" onclick="closeDetails()" aria-label="Close details">&times;</button>
+        </div>
+        <div id="detailBody"></div>
+    </div>
+</div>
+
+
+<script>
+/* ================= FRONTEND / BACKEND CONFIG ================= */
+// The dashboard can be served by FastAPI itself (/dashboard) or opened from a
+// separate static server (for example http://127.0.0.1:5500/dlp_dashboard.html).
+// window.location.origin is therefore only correct in the first case, so the
+// real API origin is detected at startup instead of being assumed.
+// Set window.AEPTAS_API_URL before this script to override detection.
+const API_FALLBACK_URL = "http://127.0.0.1:8000";
+let API_BASE_URL = API_FALLBACK_URL;
+
+let activityChart = null;
+let riskChart = null;
+
+/* ================= HELPERS ================= */
+function apiUrl(path) {
+    return `${API_BASE_URL}${path}`;
+}
+
+function firstValue(obj, keys, fallback = null) {
+    if (!obj || typeof obj !== "object") return fallback;
+    for (const key of keys) {
+        if (obj[key] !== undefined && obj[key] !== null) return obj[key];
+    }
+    return fallback;
+}
+
+function numberValue(value, fallback = 0) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+function formatNumber(value) {
+    const n = numberValue(value, 0);
+    return n.toLocaleString("en-IN");
+}
+
+function setText(id, value, fallback = "--") {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value ?? fallback;
+}
+
+function setBar(id, percent) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const value = Math.max(0, Math.min(100, numberValue(percent, 0)));
+    el.style.width = `${value}%`;
+}
+
+function asArray(data) {
+    if (Array.isArray(data)) return data;
+    if (!data || typeof data !== "object") return [];
+    const candidates = [
+        data.items, data.data, data.results, data.records,
+        data.incidents, data.alerts, data.events, data.scores
+    ];
+    for (const candidate of candidates) {
+        if (Array.isArray(candidate)) return candidate;
+    }
+    return [];
+}
+
+/* A candidate origin is the API only when its root returns the FastAPI app JSON. */
+function isApiOrigin(origin) {
+    return fetch(`${origin}/`, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+    })
+        .then(response => response.ok ? response.json() : null)
+        .catch(() => null)
+        .then(payload => !!payload && typeof payload.message === "string"
+            && payload.message.includes("AepttasShield"))
+        .catch(() => false);
+}
+
+async function resolveApiBaseUrl() {
+    if (window.AEPTAS_API_URL) {
+        API_BASE_URL = String(window.AEPTAS_API_URL).replace(/\/+$/, "");
+        return API_BASE_URL;
+    }
+
+    const candidates = [];
+    const origin = window.location.origin;
+
+    if (origin && origin !== "null") candidates.push(origin);
+    if (!candidates.includes(API_FALLBACK_URL)) candidates.push(API_FALLBACK_URL);
+
+    for (const candidate of candidates) {
+        if (await isApiOrigin(candidate)) {
+            API_BASE_URL = candidate;
+            return API_BASE_URL;
+        }
+    }
+
+    API_BASE_URL = API_FALLBACK_URL;
+    return API_BASE_URL;
+}
+
+async function requestJSON(base, path) {
+    let response;
+
+    try {
+        response = await fetch(`${base}${path}`, {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+        });
+    } catch (networkError) {
+        const error = new Error(`${path} could not reach ${base}`);
+        error.retryable = true;
+        throw error;
+    }
+
+    if (!response.ok) {
+        throw new Error(`${path} returned HTTP ${response.status}`);
+    }
+
+    const body = await response.text();
+
+    try {
+        return JSON.parse(body);
+    } catch (parseError) {
+        const error = new Error(`${path} did not return JSON from ${base}`);
+        error.retryable = true;
+        throw error;
+    }
+}
+
+async function fetchJSON(path) {
+    try {
+        return await requestJSON(API_BASE_URL, path);
+    } catch (error) {
+        // Wrong host or a non-API server: retry once against the FastAPI fallback.
+        if (!error.retryable || API_BASE_URL === API_FALLBACK_URL) throw error;
+
+        console.warn(`${API_BASE_URL} is not serving the AepttasShield API, retrying ${path} on ${API_FALLBACK_URL}`);
+        const data = await requestJSON(API_FALLBACK_URL, path);
+        API_BASE_URL = API_FALLBACK_URL;
+        return data;
+    }
+}
+
+function showApiError(message) {
+    console.error(message);
+    const existing = document.getElementById("apiStatusMessage");
+    if (existing) existing.remove();
+
+    const box = document.createElement("div");
+    box.id = "apiStatusMessage";
+    box.style.cssText = `
+        position:fixed; right:18px; bottom:18px; z-index:9999;
+        max-width:380px; padding:12px 15px; border-radius:10px;
+        background:#24121a; border:1px solid #7f1d1d; color:#fecaca;
+        font-size:11px; box-shadow:0 12px 35px rgba(0,0,0,.35);
+    `;
+    box.textContent = message;
+    document.body.appendChild(box);
+    setTimeout(() => box.remove(), 6000);
+}
+
+/* ================= LUCIDE ================= */
+lucide.createIcons();
+
+/* ================= SUMMARY ================= */
+async function loadRiskSummary() {
+    try {
+        const summary = await fetchJSON("/risk/summary");
+        console.log("Risk summary:", summary);
+
+        // Supports common FastAPI response shapes without forcing a specific schema.
+        const source = summary?.data && typeof summary.data === "object"
+            ? summary.data
+            : summary;
+
+        const activeIncidents = firstValue(source, [
+            "active_incidents", "activeIncidents", "open_incidents", "openIncidents",
+            "incident_count", "incidents"
+        ], null);
+
+        const critical = numberValue(firstValue(source, [
+            "critical", "critical_risks", "critical_count", "critical_incidents"
+        ], 0));
+        const high = numberValue(firstValue(source, [
+            "high", "high_risks", "high_count", "high_incidents"
+        ], 0));
+        const medium = numberValue(firstValue(source, [
+            "medium", "medium_risks", "medium_count", "medium_incidents"
+        ], 0));
+        const low = numberValue(firstValue(source, [
+            "low", "low_risks", "low_count", "low_incidents"
+        ], 0));
+
+        if (activeIncidents !== null && !Array.isArray(activeIncidents)) {
+            setText("activeIncidents", formatNumber(activeIncidents));
+        } else {
+            setText("activeIncidents", formatNumber(critical + high + medium + low));
+        }
+
+        const posture = firstValue(source, [
+            "security_posture", "securityPosture", "posture", "security_score",
+            "securityScore", "overall_score", "overallScore"
+        ], null);
+
+        if (posture !== null) {
+            const postureNumber = numberValue(posture);
+            setText("securityPosture", `${postureNumber.toFixed(1)}%`);
+            setBar("securityPostureBar", postureNumber);
+        }
+
+        const endpoints = firstValue(source, [
+            "protected_endpoints", "protectedEndpoints", "endpoint_count",
+            "endpoints", "total_endpoints", "totalEndpoints"
+        ], null);
+        if (endpoints !== null && !Array.isArray(endpoints)) {
+            setText("protectedEndpoints", formatNumber(endpoints));
+        }
+
+        const genai = firstValue(source, [
+            "genai_blocks", "genaiBlocks", "llm_blocks", "llmBlocks",
+            "blocked_prompts", "blockedPrompts"
+        ], null);
+        if (genai !== null && !Array.isArray(genai)) {
+            setText("genaiBlocks", formatNumber(genai));
+        }
+
+        return summary;
+    } catch (error) {
+        console.error("Error loading risk summary:", error);
+        showApiError(`Risk summary could not be loaded. Make sure FastAPI is running at ${API_BASE_URL}.`);
+        return null;
+    }
+}
+/* ================= INCIDENTS ================= */
+const ACTIVE_INCIDENT_STATUSES = new Set([
+    "OPEN", "ACTIVE", "OPENED", "IN_PROGRESS", "PENDING"
+]);
+
+function isActiveIncident(item) {
+    const status = String(firstValue(item, ["status", "state"], "OPEN")).toUpperCase();
+    return ACTIVE_INCIDENT_STATUSES.has(status);
+}
+
+async function loadIncidents() {
+    try {
+        const response = await fetchJSON("/risk/incidents");
+        const incidents = asArray(response);
+        console.log("Risk incidents:", incidents);
+
+        if (incidents.length === 0) return [];
+
+        const activeIncidents = incidents.filter(isActiveIncident);
+
+        const activeCount = new Set(
+            activeIncidents.map(item => item.incident_id)
+        ).size;
+        setText("activeIncidents", formatNumber(activeCount));
+        setBar("activeIncidentsBar", Math.min(100, activeCount * 5));
+
+        // The dashboard Risk Distribution represents current active incidents.
+        updateRiskFromRecords(activeIncidents);
+
+        return incidents;
+    } catch (error) {
+        console.warn("/risk/incidents unavailable:", error.message);
+        return [];
+    }
+}
+
+/* ================= RISK SCORES ================= */
+async function loadRiskScores() {
+    try {
+        const response = await fetchJSON("/risk/scores");
+        const scores = asArray(response);
+        console.log("Risk scores:", scores);
+
+        // Keep /risk/scores available for the Risk Analytics module.
+        // Do not overwrite the main dashboard chart with all score records.
+        return scores;
+    } catch (error) {
+        console.warn("/risk/scores unavailable:", error.message);
+        return [];
+    }
+}
+
+/* ================= RULEBOOK RISK DISTRIBUTION ================= */
+function updateRiskFromRecords(records) {
+    if (!Array.isArray(records) || !records.length) return;
+
+    const counts = {
+        "0-19": 0,
+        "20-39": 0,
+        "40-59": 0,
+        "60-79": 0,
+        "80-100": 0
+    };
+
+    records.forEach(item => {
+        const score = numberValue(firstValue(item, [
+            "total_risk_score", "totalRiskScore", "risk_score", "riskScore", "score", "risk"
+        ], null), NaN);
+
+        if (!Number.isFinite(score)) return;
+
+        if (score >= 0 && score < 20) counts["0-19"]++;
+        else if (score >= 20 && score < 40) counts["20-39"]++;
+        else if (score >= 40 && score < 60) counts["40-59"]++;
+        else if (score >= 60 && score < 80) counts["60-79"]++;
+        else if (score >= 80 && score <= 100) counts["80-100"]++;
+    });
+
+    updateRiskChart(counts);
+}
+
+function updateRiskChart(counts) {
+    if (!riskChart) return;
+
+    riskChart.data.datasets[0].data = [
+        numberValue(counts["0-19"]),
+        numberValue(counts["20-39"]),
+        numberValue(counts["40-59"]),
+        numberValue(counts["60-79"]),
+        numberValue(counts["80-100"])
+    ];
+
+    riskChart.update();
+}
+
+/* ================= SECURITY EVENTS ================= */
+async function loadSecurityEvents() {
+    try {
+        const response = await fetchJSON("/risk/alerts");
+        const alerts = asArray(response);
+        console.log("Risk alerts:", alerts);
+
+        if (alerts.length) {
+            renderEvents(alerts.slice(0, 8));
+            updateActivityChart(alerts);
+        }
+        return alerts;
+    } catch (error) {
+        console.warn("/risk/alerts unavailable:", error.message);
+        return [];
+    }
+}
+
+function relativeTime(dateValue) {
+    if (!dateValue) return "recent";
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return String(dateValue);
+
+    const diff = Math.max(0, Date.now() - date.getTime());
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (minutes < 1) return "just now";
+    if (minutes < 60) return `${minutes} min ago`;
+    if (hours < 24) return `${hours} hr ago`;
+    return `${days} day${days === 1 ? "" : "s"} ago`;
+}
+
+function eventSeverity(item) {
+    const raw = String(firstValue(item, [
+        "severity", "risk_level", "riskLevel", "level", "priority"
+    ], "LOW")).toUpperCase();
+
+    if (raw.includes("CRITICAL")) return "CRITICAL";
+    if (raw.includes("HIGH")) return "HIGH";
+    if (raw.includes("MEDIUM")) return "MEDIUM";
+    return "LOW";
+}
+
+function severityClass(severity) {
+    if (severity === "CRITICAL" || severity === "HIGH") return "badge-high";
+    if (severity === "MEDIUM") return "badge-medium";
+    return "badge-low";
+}
+
+function eventIcon(item) {
+    const text = `${firstValue(item, ["alert_type", "alertType", "event_type", "eventType", "type"], "")} ${firstValue(item, ["message", "description", "detail"], "")}`.toLowerCase();
+    if (text.includes("ai") || text.includes("llm") || text.includes("genai")) return "brain-circuit";
+    if (text.includes("usb")) return "usb";
+    if (text.includes("cloud")) return "cloud";
+    if (text.includes("mail") || text.includes("email")) return "mail";
+    if (text.includes("database") || text.includes("db")) return "database";
+    return "shield-alert";
+}
+
+function iconColorClass(item) {
+    const icon = eventIcon(item);
+    if (icon === "brain-circuit") return "red";
+    if (icon === "usb") return "purple";
+    if (icon === "cloud") return "blue";
+    return "orange";
+}
+
+function renderEvents(events) {
+    const container = document.getElementById("recentEvents");
+    if (!container) return;
+
+    const header = `
+        <div class="panel-header">
+            <div>
+                <div class="panel-title">Recent Security Events</div>
+                <div class="panel-subtitle">Real-time policy enforcement activity</div>
+            </div>
+        </div>`;
+
+    const rows = events.map(item => {
+        const severity = eventSeverity(item);
+        const title = firstValue(item, [
+            "alert_type", "alertType", "event_type", "eventType", "title", "type"
+        ], "Security Event");
+        const detail = firstValue(item, [
+            "message", "description", "detail", "reason"
+        ], "Security event detected");
+        const timestamp = firstValue(item, [
+            "created_at", "createdAt", "timestamp", "event_time", "eventTime", "time"
+        ], null);
+
+        return `
+            <div class="event">
+                <div class="event-icon ${iconColorClass(item)}">
+                    <i data-lucide="${eventIcon(item)}"></i>
+                </div>
+                <div class="event-info">
+                    <div class="event-title">${escapeHtml(String(title))}</div>
+                    <div class="event-detail">${escapeHtml(String(detail))}</div>
+                </div>
+                <span class="badge ${severityClass(severity)}">${severity}</span>
+                <span class="time">${escapeHtml(relativeTime(timestamp))}</span>
+            </div>`;
+    }).join("");
+
+    container.innerHTML = header + rows;
+    lucide.createIcons();
+}
+
+function escapeHtml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+/* ================= ACTIVITY CHART ================= */
+function createActivityChart(labels = [
+    "00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"
+], values = [0, 0, 0, 0, 0, 0, 0]) {
+    const canvas = document.getElementById("activityChart");
+    if (!canvas) return;
+
+    activityChart = new Chart(canvas, {
+        type: "line",
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                borderColor: "#7c5cff",
+                backgroundColor: "rgba(124,92,255,.15)",
+                fill: true,
+                tension: .4,
+                borderWidth: 3,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: "#62708c", font: { size: 9 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: "rgba(80,100,140,.08)" },
+                    ticks: { color: "#62708c", font: { size: 9 } }
+                }
+            }
+        }
+    });
+}
+
+function updateActivityChart(events) {
+    if (!activityChart || !Array.isArray(events)) return;
+
+    const buckets = [0, 0, 0, 0, 0, 0, 0];
+    const labels = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"];
+
+    events.forEach(item => {
+        const value = firstValue(item, [
+            "created_at", "createdAt", "timestamp", "event_time", "eventTime", "time"
+        ], null);
+        if (!value) return;
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return;
+        const hour = date.getHours();
+        const index = Math.min(6, Math.floor(hour / 4));
+        buckets[index]++;
+    });
+
+    activityChart.data.labels = labels;
+    activityChart.data.datasets[0].data = buckets;
+    activityChart.update();
+}
+
+/* ================= RISK CHART ================= */
+function createRiskChart() {
+    const canvas = document.getElementById("riskChart");
+    if (!canvas) return;
+
+    riskChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels: ["0–19", "20–39", "40–59", "60–79", "80–100"],
+            datasets: [{
+                data: [0, 0, 0, 0, 0],
+                backgroundColor: ["#3b82f6", "#eab308", "#f97316", "#a855f7", "#ef4444"],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: "68%",
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        color: "#8997b2",
+                        font: { size: 9 },
+                        padding: 15
+                    }
+                }
+            }
+        }
+    });
+}
+
+/* ================= INITIAL LOAD ================= */
+async function loadDashboardData() {
+    createActivityChart();
+    createRiskChart();
+
+    // These calls are independent. If one endpoint is unavailable,
+    // the rest of the dashboard can still load.
+    await loadRiskSummary();
+    await Promise.all([
+        loadIncidents(),
+        loadRiskScores(),
+        loadSecurityEvents()
+    ]);
+}
+
+/* ================= RISK ANALYTICS MODULE ================= */
+let moduleRiskChart = null;
+
+/* An enhancement endpoint must not blank a whole module when it fails. */
+function fetchOptionalJSON(path) {
+    return fetchJSON(path).catch(error => {
+        console.warn(`${path} unavailable, continuing without it:`, error.message);
+        return null;
+    });
+}
+
+async function loadRiskAnalytics() {
+    try {
+        const [summary, incidents, scores, departments, highRiskUsers, alerts, factorMetadata] = await Promise.all([
+            fetchJSON("/risk/summary"),
+            fetchJSON("/risk/incidents"),
+            fetchJSON("/risk/scores"),
+            fetchJSON("/risk/departments"),
+            fetchJSON("/risk/high-risk-users"),
+            fetchJSON("/risk/alerts"),
+            fetchOptionalJSON("/risk/factors")
+        ]);
+
+        console.log("Risk Analytics Summary:", summary);
+        console.log("Risk Analytics Incidents:", incidents);
+        console.log("Risk Analytics Scores:", scores);
+        console.log("Risk Analytics Departments:", departments);
+        console.log("Risk Analytics High-Risk Users:", highRiskUsers);
+        console.log("Risk Analytics Alerts:", alerts);
+        console.log("Risk Analytics Rulebook Metadata:", factorMetadata);
+
+        const scoreRecords = asArray(scores);
+        const activeIncidentRecords = asArray(incidents).filter(isActiveIncident);
+        setText("raActiveIncidents", formatNumber(summary.active_incidents));
+        setText("raAverageRisk", numberValue(summary.average_risk_score).toFixed(2));
+        setText("raMaximumRisk", numberValue(summary.maximum_risk_score).toFixed(2));
+
+        updateModuleRiskChart(scoreRecords, factorMetadata);
+        renderRiskFactors(scoreRecords[0], factorMetadata);
+        renderRiskBands(factorMetadata, countScoresByBand(scoreRecords, (factorMetadata && factorMetadata.action_bands) || []));
+        renderDepartmentRisk(asArray(departments));
+        renderHighRiskUsers(asArray(highRiskUsers));
+        renderRiskAlerts(asArray(alerts));
+        renderRecentIncidents(asArray(incidents));
+        renderLatestScores(scoreRecords);
+    } catch (error) {
+        console.error("Risk Analytics loading failed:", error);
+        showApiError("Unable to load Risk Analytics data. Make sure FastAPI is running at " + API_BASE_URL + ".");
+    }
+}
+
+function updateModuleRiskChart(records, metadata) {
+    const canvas = document.getElementById("moduleRiskChart");
+    if (!canvas) return;
+
+    // Band boundaries come from /risk/factors so the chart always matches the
+    // backend enforcement model. Falls back to the previous fixed ranges.
+    const ranges = (metadata && metadata.action_bands || []).map(band => band.range);
+    const labels = ranges.length ? ranges : ["0-19", "20-39", "40-59", "60-79", "80-100"];
+    const counts = Object.fromEntries(labels.map(range => [range, 0]));
+
+    const bands = (metadata && metadata.action_bands) || [];
+
+    // Use the API band boundaries when available so the histogram can never
+    // drift from the backend enforcement model.
+    if (bands.length) {
+        const bandCounts = countScoresByBand(records, bands);
+        bands.forEach(band => { counts[band.range] = bandCounts[band.range] || 0; });
+    } else {
+        records.forEach(item => {
+            const score = numberValue(firstValue(item, [
+                "total_risk_score", "totalRiskScore", "risk_score", "riskScore", "score"
+            ], null), NaN);
+
+            if (!Number.isFinite(score)) return;
+
+            if (score >= 0 && score < 20) counts["0-19"]++;
+            else if (score < 40) counts["20-39"]++;
+            else if (score < 60) counts["40-59"]++;
+            else if (score < 80) counts["60-79"]++;
+            else if (score <= 100) counts["80-100"]++;
+        });
+    }
+
+    if (moduleRiskChart) moduleRiskChart.destroy();
+
+    moduleRiskChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels,
+            datasets: [{
+                data: labels.map(range => counts[range]),
+                backgroundColor: ["#3b82f6", "#eab308", "#f97316", "#a855f7", "#ef4444"].slice(0, labels.length),
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: "65%",
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: { color: "#8997b2", padding: 12, font: { size: 10 } }
+                }
+            }
+        }
+    });
+}
+
+function renderDepartmentRisk(departments) {
+    const container = document.getElementById("departmentRiskList");
+    if (!container) return;
+
+    if (!departments.length) {
+        container.innerHTML = "<div>No department risk data available.</div>";
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="risk-row risk-grid-6 risk-header">
+            <div>Department</div><div>Incidents</div><div>Score Evaluations</div><div>Average</div><div>Maximum</div><div>Risk Level / Action</div>
+        </div>` + departments.map(department => {
+        const name = firstValue(department, ["department"], "Unknown");
+        const incidents = numberValue(department.incident_count);
+        const evaluations = numberValue(firstValue(department, ["risk_score_evaluations"], null), incidents);
+        const average = numberValue(department.average_risk);
+        const maximum = numberValue(department.max_risk);
+        const level = firstValue(department, ["risk_level"], "LOW");
+        const action = firstValue(department, ["risk_action"], "MONITOR");
+
+        return `
+            <div class="risk-row risk-grid-6">
+                <div><strong>${escapeHtml(String(name))}</strong></div>
+                <div>${formatNumber(incidents)}</div>
+                <div>${formatNumber(evaluations)}</div>
+                <div>${average.toFixed(2)}</div>
+                <div>${maximum.toFixed(2)}</div>
+                <div>${escapeHtml(String(level))} · ${escapeHtml(String(action))}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderHighRiskUsers(users) {
+    const container = document.getElementById("highRiskUserList");
+    if (!container) return;
+
+    if (!users.length) {
+        container.innerHTML = "<div>No high-risk users found.</div>";
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="risk-row risk-grid-7 risk-header">
+            <div>User</div><div>Department</div><div>Average</div><div>Maximum</div><div>Incidents</div><div>Score Evaluations</div><div>Risk Level / Action</div>
+        </div>` + users.map(user => {
+        const username = firstValue(user, ["username"], `User ${firstValue(user, ["user_id"], "Unknown")}`);
+        const department = firstValue(user, ["department"], "Unassigned");
+        const average = numberValue(user.average_risk);
+        const maximum = numberValue(user.max_risk);
+        const incidents = numberValue(user.incident_count);
+        const evaluations = numberValue(firstValue(user, ["risk_score_evaluations"], null), incidents);
+        const level = firstValue(user, ["risk_level"], "LOW");
+        const action = firstValue(user, ["risk_action"], "MONITOR");
+
+        return `
+            <div class="risk-row risk-grid-7">
+                <div><strong>${escapeHtml(String(username))}</strong></div>
+                <div>${escapeHtml(String(department))}</div>
+                <div>${average.toFixed(2)}</div>
+                <div>${maximum.toFixed(2)}</div>
+                <div>${formatNumber(incidents)}</div>
+                <div>${formatNumber(evaluations)}</div>
+                <div>${escapeHtml(String(level))} · ${escapeHtml(String(action))}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRiskAlerts(alerts) {
+    const container = document.getElementById("riskAlertList");
+    if (!container) return;
+
+    if (!alerts.length) {
+        container.innerHTML = "<div>No recent risk alerts.</div>";
+        return;
+    }
+
+    detailStore.riskAlerts = alerts.slice(0, 8);
+    container.innerHTML = detailStore.riskAlerts.map((alert, index) => {
+        const type = firstValue(alert, ["alert_type", "alertType", "type"], "RISK_ALERT");
+        const level = firstValue(alert, ["risk_level", "severity"], "MONITOR");
+        const message = firstValue(alert, ["message", "risk_reason", "description"], "Risk event detected");
+        const status = firstValue(alert, ["status"], "OPEN");
+        const timestamp = firstValue(alert, ["created_at", "createdAt"], null);
+
+        return `
+            <div class="risk-alert">
+                <strong>${escapeHtml(String(type))} / ${escapeHtml(String(level))}</strong>
+                <div>${escapeHtml(String(message))}</div>
+                <small>${escapeHtml(String(status))} · ${escapeHtml(relativeTime(timestamp))}</small>
+                <div style="margin-top:8px"><button class="detail-open" onclick="openDetails('riskAlerts', ${index})">View Details</button></div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRiskFactors(score, metadata) {
+    const container = document.getElementById("riskFactorList");
+    if (!container) return;
+
+    if (!score) {
+        container.innerHTML = "<div>No risk-factor data available.</div>";
+        return;
+    }
+
+    const values = score.factors || {};
+    const meta = (metadata && metadata.factors) || {};
+    detailFactorMetadata = metadata;
+    const keys = Object.keys(meta).length ? Object.keys(meta) : Object.keys(values);
+
+    if (!keys.length) {
+        container.innerHTML = "<div>No risk-factor data available.</div>";
+        return;
+    }
+
+    // Labels, weights and the weighted/supporting distinction all come from
+    // /risk/factors. The frontend never restates scoring policy.
+    container.innerHTML = keys.map(key => {
+        const info = meta[key] || {};
+        const label = info.label || key;
+        const value = numberValue(values[key], NaN);
+        const supporting = info.weighted === false;
+        const marker = supporting
+            ? "SUPPORTING · NOT WEIGHTED"
+            : `WEIGHT ${(numberValue(info.weight, 0) * 100).toFixed(0)}%`;
+
+        return `
+            <div class="risk-factor${supporting ? " supporting" : ""}">
+                <span>${escapeHtml(String(label))}</span>
+                <strong>${Number.isFinite(value) ? value.toFixed(2) : "--"}</strong>
+                <em>${escapeHtml(marker)}</em>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderRiskBands(metadata, counts) {
+    const container = document.getElementById("riskBandList");
+    if (!container) return;
+
+    const bands = (metadata && metadata.action_bands) || [];
+    if (!bands.length) {
+        container.innerHTML = "<div>No enforcement band data available.</div>";
+        return;
+    }
+
+    const levels = (metadata && metadata.enforcement_levels) || {};
+
+    container.innerHTML = `
+        <div class="risk-row risk-grid-6 risk-header">
+            <div>Score Band</div><div>Risk Level</div><div>Enforcement Action</div><div>Level</div><div>Meaning</div><div>Scores</div>
+        </div>` + bands.map(band => `
+        <div class="risk-row risk-grid-6">
+            <div><strong>${escapeHtml(String(band.range))}</strong></div>
+            <div>${escapeHtml(String(band.level || ""))}</div>
+            <div>${escapeHtml(String(band.action || ""))}</div>
+            <div>${escapeHtml(String(band.enforcement_level || ""))}</div>
+            <div>${escapeHtml(String(levels[band.enforcement_level] || ""))}</div>
+            <div>${formatNumber((counts || {})[band.range] || 0)}</div>
+        </div>
+    `).join("");
+}
+
+/* Buckets risk score records using the band boundaries served by the API. */
+function countScoresByBand(records, bands) {
+    const counts = {};
+
+    bands.forEach(band => { counts[band.range] = 0; });
+
+    (records || []).forEach(item => {
+        const score = numberValue(firstValue(item, [
+            "total_risk_score", "totalRiskScore", "risk_score", "riskScore", "score"
+        ], null), NaN);
+
+        if (!Number.isFinite(score)) return;
+
+        // Select the band with the highest minimum that the score still
+        // satisfies, otherwise the 0-19 band (min 0) would match everything.
+        const band = bands.reduce((best, entry) => {
+            const min = numberValue(entry.min, 0);
+            if (score < min) return best;
+            if (!best || min > numberValue(best.min, 0)) return entry;
+            return best;
+        }, null);
+
+        if (band) counts[band.range]++;
+    });
+
+    return counts;
+}
+
+/* ================= RULEBOOK DETAILS PANEL ================= */
+
+const detailStore = {};
+
+/* Rulebook factor metadata from /risk/factors, reused by the details panel so
+   factor names are always the backend's own labels. */
+let detailFactorMetadata = null;
+
+function factorLabel(key) {
+    const meta = (detailFactorMetadata && detailFactorMetadata.factors) || {};
+    const info = meta[key];
+    if (info && info.label) return info.label;
+    return String(key).replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function escapeText(value) {
+    return escapeHtml(String(value));
+}
+
+function detailField(label, value) {
+    if (value === null || value === undefined || value === "") return "";
+    return `<div class="detail-field"><span>${escapeText(label)}</span><strong>${escapeText(value)}</strong></div>`;
+}
+
+function detailWideField(label, value) {
+    if (value === null || value === undefined || value === "") return "";
+    return `<div class="detail-field wide"><span>${escapeText(label)}</span><strong>${escapeText(value)}</strong></div>`;
+}
+
+function detailSection(title, subtitle, html) {
+    if (!html) return "";
+    const sub = subtitle ? `<div class="panel-subtitle">${escapeText(subtitle)}</div>` : "";
+    return `<div class="risk-section"><div class="panel-title">${escapeText(title)}</div>${sub}${html}</div>`;
+}
+
+function detailGrid(html) {
+    return html ? `<div class="detail-grid">${html}</div>` : "";
+}
+
+function parseRiskReasons(raw) {
+    if (!raw) return "";
+    if (Array.isArray(raw)) return raw.join(" · ");
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.join(" · ");
+    } catch (error) {
+        /* fall through: stored value is already plain text */
+    }
+
+    return String(raw);
+}
+
+function renderChain(relatedEvents) {
+    if (!Array.isArray(relatedEvents) || !relatedEvents.length) return "";
+
+    const steps = relatedEvents.map((event, index) => {
+        const arrow = index > 0 ? `<div class="chain-arrow">&darr;</div>` : "";
+
+        return `${arrow}
+            <div class="chain-step">
+                <span class="chain-id">EVT-${escapeText(event.event_id)}</span>
+                <span>${escapeText(event.event_type || "UNKNOWN")}</span>
+                <span class="badge badge-low">${escapeText(event.channel || "n/a")}</span>
+                <span class="chain-meta">${escapeText(event.data_classification || "n/a")} · ${numberValue(event.volume).toFixed(0)} MB · ${escapeText(event.action_taken || "n/a")}</span>
+                <span class="chain-meta">${escapeText(event.timestamp || "")}</span>
+            </div>`;
+    }).join("");
+
+    return `<div class="chain">${steps}</div>`;
+}
+
+function justificationText(record) {
+    const action = String(record.risk_action || "").toUpperCase();
+
+    if (action.includes("JUSTIF")) {
+        return "Requires justification · no exception record in this dataset";
+    }
+
+    if (action.includes("CHALLENGE")) {
+        return "Adaptive challenge · no exception record in this dataset";
+    }
+
+    return "No exception required for this action";
+}
+
+function openDetails(kind, index) {
+    const record = (detailStore[kind] || [])[index];
+    if (!record) return;
+    const overlay = document.getElementById("detailOverlay");
+    const body = document.getElementById("detailBody");
+    const titleEl = document.getElementById("detailTitle");
+    const subtitleEl = document.getElementById("detailSubtitle");
+
+    let title = "Details";
+    let subtitle = "";
+    let html = "";
+
+    if (kind === "riskScores") {
+        title = `Risk Score #${record.id}`;
+        subtitle = "Explainable risk breakdown and enforcement audit evidence";
+
+        html += detailSection("Risk Decision", null, detailGrid(
+            detailField("Risk Score", numberValue(record.total_risk_score).toFixed(2))
+            + detailField("Risk Level", record.risk_level)
+            + detailField("Risk Action", record.risk_action)
+            + detailField("Enforcement Level", record.enforcement_level)
+            + detailField("Event Severity", record.severity)
+            + detailField("Data Classification", record.classification)
+            + detailField("Incident ID", record.incident_id)
+            + detailField("Event ID", record.event_id)
+            + detailField("Timestamp", record.created_at)
+        ));
+
+        html += detailSection("Calculated Factors", "Every factor returned by /risk/scores", detailGrid(
+            Object.entries(record.factors || {})
+                .map(([key, value]) => detailField(factorLabel(key), numberValue(value).toFixed(2)))
+                .join("")
+        ));
+
+        html += detailSection("Risk Reason", null, detailGrid(
+            detailWideField("Reason", parseRiskReasons(record.risk_reason))
+        ));
+
+        html += detailSection("Audit Evidence", "Enforcement metadata only. Inspected content is never returned by the API.", detailGrid(
+            detailField("Event ID", record.event_id)
+            + detailField("Rule ID", record.detection_rule)
+            + detailField("User", record.username)
+            + detailField("Department", record.department)
+            + detailField("Device", record.device_name)
+            + detailField("Device Trust", record.device_trust)
+            + detailField("Event Timestamp", record.event_timestamp)
+            + detailField("Channel", record.channel)
+            + detailField("Data Class", record.classification)
+            + detailField("Detector", record.event_type)
+            + detailField("Destination", record.destination)
+            + detailField("Action", record.action)
+            + detailField("Outcome", record.event_action)
+            + detailField("Risk Score", numberValue(record.total_risk_score).toFixed(2))
+            + detailField("Incident ID", record.incident_id)
+            + detailField("Incident Status", record.incident_status)
+            + detailField("Correlation ID", record.correlation_id || "Not correlated")
+            + detailField("Justification", justificationText(record))
+        ));
+
+    } else if (kind === "riskAlerts") {
+        title = `${record.alert_type} Alert`;
+        subtitle = "Alert raised by the adaptive risk engine";
+
+        html += detailSection("Alert", null, detailGrid(
+            detailField("Alert Type", record.alert_type)
+            + detailField("Severity", record.severity)
+            + detailField("Status", record.status)
+            + detailField("User ID", record.user_id)
+            + detailField("Risk Score", numberValue(record.total_risk_score).toFixed(2))
+            + detailField("Risk Level", record.risk_level)
+            + detailField("Risk Action", record.risk_action)
+            + detailField("Enforcement Level", record.enforcement_level)
+            + detailField("Created At", record.created_at)
+            + detailWideField("Message", record.message)
+        ));
+
+    } else if (kind === "uebaAnomalies") {
+        title = `${record.anomaly_type} Anomaly`;
+        subtitle = record.username
+            ? `Detected for ${record.username}`
+            : "Behavioural anomaly";
+
+        html += detailSection("Anomaly", null, detailGrid(
+            detailField("Anomaly Type", record.anomaly_type)
+            + detailField("Anomaly Score", numberValue(record.anomaly_score).toFixed(2))
+            + detailField("Severity", record.severity)
+            + detailField("User", record.username)
+            + detailField("Department", record.department)
+            + detailField("Related DLP Event", record.event_id ? `EVT-${record.event_id}` : null)
+            + detailField("Detected At", record.detected_at)
+            + detailField("Correlation ID", record.correlation_id)
+            + detailWideField("Reason", record.reason)
+        ));
+
+        const chain = renderChain(record.related_events);
+        html += chain
+            ? detailSection(
+                "Correlated Transfer Chain",
+                `${(record.related_event_ids || []).length} events correlated within ${record.correlation_window_minutes || 0} minutes under ${record.correlation_id}`,
+                chain
+            )
+            : detailSection("Correlated Transfer Chain", null,
+                `<div class="detail-empty">This is a single-event detection. No correlated event chain was recorded.</div>`);
+
+    } else if (kind === "incidents") {
+        title = `Incident ${record.incident_id}`;
+        subtitle = "Active means status OPEN / ACTIVE / IN_PROGRESS / PENDING";
+
+        html += detailSection("Incident", null, detailGrid(
+            detailField("Incident ID", record.incident_id)
+            + detailField("Status", record.status)
+            + detailField("Severity", record.severity)
+            + detailField("Risk Score", numberValue(record.risk_score).toFixed(2))
+            + detailField("Risk Level", record.risk_level)
+            + detailField("Risk Action", record.risk_action)
+            + detailField("Enforcement Level", record.enforcement_level)
+            + detailField("User", record.username)
+            + detailField("Department", record.department)
+            + detailField("Channel", record.channel)
+            + detailField("Destination", record.destination)
+            + detailField("Created At", record.created_at)
+            + detailWideField("Title", record.title)
+        ));
+    }
+
+    body.innerHTML = html || `<div class="detail-empty">No further detail is available for this record.</div>`;
+    titleEl.textContent = title;
+    subtitleEl.textContent = subtitle;
+
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+}
+
+function closeDetails() {
+    const overlay = document.getElementById("detailOverlay");
+    if (!overlay) return;
+    overlay.hidden = true;
+    document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeDetails();
+});
+
+document.addEventListener("click", event => {
+    if (event.target && event.target.id === "detailOverlay") closeDetails();
+});
+
+/* ================================================================
+   RULEBOOK COVERAGE CHECKLIST (developer reference, not rendered)
+   AepttasShield Enterprise DLP - Risk Analytics + UEBA
+   ----------------------------------------------------------------
+   STATUS KEY
+     FULL    backend + API + dashboard all covered
+     PARTIAL covered except where noted in NOTES
+     NONE    no backend/data source exists yet
+
+   REQUIREMENT              BACKEND        API                DASHBOARD   STATUS
+   -----------------------  -------------  -----------------  ----------  ------
+   Adaptive Risk Model      risk_engine    /risk/factors      Risk Analytics FULL
+                            classify_risk  /risk/scores        bands table
+   Risk distribution        risk_engine    /risk/factors      Doughnut +   FULL
+                            RISK_BANDS     /risk/summary       band counts
+   Data Sensitivity         risk_engine    /risk/factors      Factor grid  FULL
+   Destination Trust        risk_engine    /risk/factors      Factor grid  FULL
+   User Risk                risk_engine    /risk/factors      Factor grid  FULL
+                            (added)
+   Device Trust             risk_engine    /risk/factors      Factor grid  FULL
+   Behaviour Anomaly        ueba_engine    /risk/factors      Factor grid  FULL
+   Transfer Volume          risk_engine    /risk/factors      Factor grid  FULL
+   Channel Risk             risk_engine    /risk/factors      Factor grid  FULL
+   Severity                 risk_engine    /risk/factors      Factor grid  FULL
+                            (supporting)
+   Frequency Risk           risk_engine    /risk/factors      Factor grid  FULL
+                            (supporting)
+   Behaviour Baseline       ueba_engine    /ueba/profiles     Profile      FULL
+                                                  table (11 cols)
+   Bulk Export              ueba_engine    /ueba/anomalies    Anomaly      FULL
+   After-Hours Activity     ueba_engine    /ueba/anomalies    Anomaly      FULL
+   Role Mismatch            ueba_engine    /ueba/anomalies    Anomaly      FULL
+   Repeated Attempts        ueba_engine    /ueba/anomalies    Anomaly      FULL
+   Channel Chaining         ueba_engine    /ueba/anomalies    Timeline     FULL
+                            (detects)      correlation_id     panel
+   Channel Chaining         ueba_engine    /ueba/anomalies    Timeline     FULL
+     correlation              (stores)     related_events     panel
+   High-Risk Users          risk.py        /risk/high-risk-   High-Risk    FULL
+                                                users         table
+   Department Risk          risk.py        /risk/departments  Department   FULL
+                                                       table
+   Incident Analytics       risk.py        /risk/summary      KPI cards +  FULL
+                                          /risk/incidents    incident tbl
+   Risk Alerts              risk.py        /risk/alerts       Alert cards  FULL
+                                          (60+ / 80+)       + details
+   Explainable Risk         risk_engine    /risk/scores       Details      FULL
+                                          risk_action        panel
+                                          risk_reason
+   Audit / Evidence         risk.py        /risk/scores       Details      PARTIAL
+                                          event/device/      panel
+                                          outcome fields
+   Incident Correlation     risk.py        /risk/incidents    Active vs    PARTIAL
+                                          active_incidents   total labels
+   Exception / Justification  --           --                 Justification PARTIAL
+                                                                        status only
+   NOTES
+   - Exception/Justification has no backend table or module, so the panel
+     reports the required action and states that no exception record exists.
+     An approval engine is deliberately NOT duplicated in the dashboard.
+   - Alert de-duplication is enforced in the backend on
+     (user_id, alert_type, status=OPEN). The dashboard issues GET requests
+     only, so refreshing never creates alert records.
+   - Scoring weights, band boundaries, factor labels and the L0-L5 mapping are
+     served by /risk/factors so this file never restates scoring policy.
+   ================================================================ */
+
+function renderRecentIncidents(incidents) {
+    const container = document.getElementById("recentIncidentList");
+    if (!container) return;
+    if (!incidents.length) {
+        container.innerHTML = "<div>No recent incidents found.</div>";
+        return;
+    }
+
+    detailStore.incidents = incidents.slice(0, 8);
+    container.innerHTML = detailStore.incidents.map((incident, index) => `
+        <div class="risk-row risk-grid-5">
+            <div><strong>${escapeHtml(String(firstValue(incident, ["title"], `Incident ${incident.incident_id}`)))}</strong><small>${escapeHtml(String(firstValue(incident, ["username"], `User ${incident.user_id}`)))}</small></div>
+            <div>${escapeHtml(String(firstValue(incident, ["status"], "OPEN")))}</div>
+            <div>${numberValue(incident.risk_score).toFixed(2)}</div>
+            <div>${escapeHtml(String(firstValue(incident, ["risk_level"], "MONITOR")))}</div>
+            <div>${escapeHtml(relativeTime(incident.created_at))}<div style="margin-top:6px"><button class="detail-open" onclick="openDetails('incidents', ${index})">View Details</button></div></div>
+        </div>
+    `).join("");
+}
+
+function renderLatestScores(scores) {
+    const container = document.getElementById("latestScoreList");
+    if (!container) return;
+    if (!scores.length) {
+        container.innerHTML = "<div>No risk scores found.</div>";
+        return;
+    }
+
+    detailStore.riskScores = scores.slice(0, 8);
+    container.innerHTML = `
+        <div class="risk-row risk-grid-6 risk-header">
+            <div>Score</div><div>Risk Level</div><div>Risk Action</div><div>User</div><div>Timestamp</div><div></div>
+        </div>` + detailStore.riskScores.map((score, index) => `
+        <div class="risk-row risk-grid-6">
+            <div><strong>${numberValue(score.total_risk_score).toFixed(2)}</strong></div>
+            <div>${escapeHtml(String(firstValue(score, ["risk_level"], "LOW")))}</div>
+            <div>${escapeHtml(String(firstValue(score, ["risk_action"], "MONITOR")))}</div>
+            <div>${escapeHtml(String(firstValue(score, ["username", "user_id"], "Unknown")))}</div>
+            <div>${escapeHtml(relativeTime(score.created_at))}</div>
+            <div><button class="detail-open" onclick="openDetails('riskScores', ${index})">View Details</button></div>
+        </div>
+    `).join("");
+}
+
+/* ================= UEBA MODULE ================= */
+let uebaAnomalyChart = null;
+
+const UEBA_SEVERITY_COLORS = {
+    CRITICAL: "#ef4444",
+    HIGH: "#f97316",
+    MEDIUM: "#a855f7",
+    LOW: "#3b82f6"
+};
+
+/* Each UEBA endpoint is optional: a single failure must not blank the module. */
+function fetchUEBA(path) {
+    return fetchJSON(path).catch(error => {
+        console.warn(`UEBA ${path} unavailable:`, error.message);
+        return null;
+    });
+}
+
+async function loadUEBA() {
+    const [summary, anomalies, alerts, profiles] = await Promise.all([
+        fetchUEBA("/ueba/summary"),
+        fetchUEBA("/ueba/anomalies"),
+        fetchUEBA("/ueba/alerts"),
+        fetchUEBA("/ueba/profiles")
+    ]);
+
+    console.log("UEBA Summary:", summary);
+    console.log("UEBA Anomalies:", anomalies);
+    console.log("UEBA Alerts:", alerts);
+    console.log("UEBA Profiles:", profiles);
+
+    if (summary === null && anomalies === null && alerts === null && profiles === null) {
+        showApiError("Unable to load UEBA data. Make sure FastAPI is running at " + API_BASE_URL + ".");
+        return;
+    }
+
+    const anomalyRecords = asArray(anomalies);
+    // /ueba/summary -> UEBASummaryResponse. Left as "--" when the endpoint is unavailable.
+    if (summary && typeof summary === "object") {
+        setText("uebaProfileCount", formatNumber(firstValue(summary, ["total_profiles"], 0)));
+        setText("uebaAnomalyCount", formatNumber(firstValue(summary, ["total_anomalies"], 0)));
+        setText("uebaCriticalCount", formatNumber(firstValue(summary, ["critical_anomalies"], 0)));
+        setText("uebaAverageScore", numberValue(firstValue(summary, ["average_behaviour_score"], 0)).toFixed(2));
+    }
+
+    // Anomalous users are derived from the actual anomaly records, not assumed.
+    const anomalousUsers = new Set(
+        anomalyRecords
+            .map(anomaly => firstValue(anomaly, ["user_id"], null))
+            .filter(value => value !== null && value !== undefined)
+    ).size;
+    setText("uebaAnomalousUsers", formatNumber(anomalousUsers));
+
+    updateUEBAAnomalyChart(anomalyRecords);
+    renderUEBAAnomalies(anomalyRecords);
+    renderUEBAAlerts(asArray(alerts));
+    renderUEBAProfiles(asArray(profiles));
+}
+
+function updateUEBAAnomalyChart(anomalies) {
+    const canvas = document.getElementById("uebaAnomalyChart");
+    if (!canvas) return;
+
+    const empty = document.getElementById("uebaAnomalyChartEmpty");
+    const counts = {};
+
+    anomalies.forEach(anomaly => {
+        const severity = eventSeverity(anomaly);
+        counts[severity] = (counts[severity] || 0) + 1;
+    });
+
+    const severities = Object.keys(UEBA_SEVERITY_COLORS).filter(severity => counts[severity]);
+
+    if (uebaAnomalyChart) {
+        uebaAnomalyChart.destroy();
+        uebaAnomalyChart = null;
+    }
+
+    if (!severities.length) {
+        canvas.style.display = "none";
+        if (empty) empty.textContent = "No behavioural anomalies available to chart.";
+        return;
+    }
+
+    canvas.style.display = "";
+    if (empty) empty.textContent = "";
+
+    uebaAnomalyChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+            labels: severities,
+            datasets: [{
+                data: severities.map(severity => counts[severity]),
+                backgroundColor: severities.map(severity => UEBA_SEVERITY_COLORS[severity]),
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            cutout: "65%",
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: { color: "#8997b2", padding: 12, font: { size: 10 } }
+                }
+            }
+        }
+    });
+}
+
+function renderUEBAAnomalies(anomalies) {
+    const container = document.getElementById("uebaAnomalyList");
+    if (!container) return;
+    if (!anomalies.length) {
+        container.innerHTML = "<div>No behavioural anomalies detected.</div>";
+        return;
+    }
+
+    detailStore.uebaAnomalies = anomalies.slice(0, 8);
+    container.innerHTML = `
+        <div class="risk-row risk-grid-6 risk-header">
+            <div>Anomaly</div><div>User</div><div>DLP Event</div><div>Score</div><div>Severity</div><div>Detected</div>
+        </div>` + detailStore.uebaAnomalies.map((anomaly, index) => {
+        const severity = eventSeverity(anomaly);
+        const username = firstValue(anomaly, ["username"], `User ${firstValue(anomaly, ["user_id"], "Unknown")}`);
+        const eventId = firstValue(anomaly, ["event_id"], null);
+        const correlationId = firstValue(anomaly, ["correlation_id"], null);
+        const detected = `<div>${escapeHtml(relativeTime(anomaly.detected_at))}</div><div style="margin-top:6px"><button class="detail-open" onclick="openDetails('uebaAnomalies', ${index})">View Details</button></div>`;
+
+        return `
+            <div class="risk-row risk-grid-6">
+                <div><strong>${escapeHtml(String(firstValue(anomaly, ["anomaly_type"], "UNKNOWN")))}</strong><small>${escapeHtml(String(firstValue(anomaly, ["reason"], "No reason recorded")))}</small>${correlationId ? `<small style="color:#60a5fa">Correlation: ${escapeHtml(String(correlationId))}</small>` : ""}</div>
+                <div>${escapeHtml(String(username))}</div>
+                <div>${eventId === null ? "Not linked" : escapeHtml(`EVT-${eventId}`)}</div>
+                <div>${numberValue(anomaly.anomaly_score).toFixed(2)}</div>
+                <div><span class="badge ${severityClass(severity)}">${severity}</span></div>
+                <div>${detected}</div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderUEBAAlerts(alerts) {
+    const container = document.getElementById("uebaAlertList");
+    if (!container) return;
+    if (!alerts.length) {
+        container.innerHTML = "<div>No UEBA alerts found.</div>";
+        return;
+    }
+
+    container.innerHTML = alerts.slice(0, 8).map(alert => {
+        const severity = eventSeverity(alert);
+        const username = firstValue(alert, ["username"], `User ${firstValue(alert, ["user_id"], "Unknown")}`);
+
+        return `
+            <div class="risk-alert">
+                <strong>${escapeHtml(String(firstValue(alert, ["alert_type"], "UEBA_ALERT")))} / ${severity}</strong>
+                <div>${escapeHtml(String(firstValue(alert, ["message"], "Behavioural anomaly detected")))}</div>
+                <small>${escapeHtml(String(username))} · ${escapeHtml(String(firstValue(alert, ["status"], "OPEN")))} · Score ${numberValue(alert.risk_score).toFixed(2)} · ${escapeHtml(relativeTime(alert.created_at))}</small>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderUEBAProfiles(profiles) {
+    const container = document.getElementById("uebaProfileList");
+    if (!container) return;
+    if (!profiles.length) {
+        container.innerHTML = "<div>No behaviour profiles have been generated yet.</div>";
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="risk-row risk-grid-11 risk-header">
+            <div>User</div><div>Department</div><div>Baseline Events</div><div>Average Volume</div><div>Events / Day</div><div>Normal Start</div><div>Normal End</div><div>Common Channel</div><div>Common Destination</div><div>Common Classification</div><div>Last Updated</div>
+        </div>` + profiles.slice(0, 8).map(profile => `
+        <div class="risk-row risk-grid-11">
+            <div><strong>${escapeHtml(String(firstValue(profile, ["username"], `User ${firstValue(profile, ["user_id"], "Unknown")}`)))}</strong></div>
+            <div>${escapeHtml(String(firstValue(profile, ["department"], "Unassigned")))}</div>
+            <div>${formatNumber(firstValue(profile, ["baseline_event_count"], null))}</div>
+            <div>${numberValue(firstValue(profile, ["average_volume"], null)).toFixed(2)} MB</div>
+            <div>${numberValue(firstValue(profile, ["average_events_per_day"], null)).toFixed(2)}</div>
+            <div>${formatHour(firstValue(profile, ["normal_start_hour"], null))}</div>
+            <div>${formatHour(firstValue(profile, ["normal_end_hour"], null))}</div>
+            <div>${escapeHtml(String(firstValue(profile, ["common_channel"], "Not recorded")))}</div>
+            <div>${escapeHtml(String(firstValue(profile, ["common_destination"], "Not recorded")))}</div>
+            <div>${escapeHtml(String(firstValue(profile, ["common_data_classification"], "Not recorded")))}</div>
+            <div>${escapeHtml(relativeTime(profile.updated_at))}</div>
+        </div>
+    `).join("");
+}
+
+/* Renders the stored hour-of-day baseline window, e.g. 09:00. */
+function formatHour(hour) {
+    const value = Number(hour);
+    if (!Number.isFinite(value) || value < 0 || value > 23) return "Not recorded";
+    return `${String(value).padStart(2, "0")}:00`;
+}
+/* ================= NAVIGATION ================= */
+function clearActive() {
+    document.querySelectorAll(".nav-item")
+        .forEach(item => item.classList.remove("active"));
+}
+
+function showDashboard(button) {
+    clearActive();
+    button.classList.add("active");
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("module").classList.remove("show");
+    document.getElementById("pageTitle").innerText = "Security Dashboard";
+}
+
+function showModule(button, name, icon) {
+    clearActive();
+    button.classList.add("active");
+    document.getElementById("dashboard").style.display = "none";
+    document.getElementById("module").classList.add("show");
+    document.getElementById("pageTitle").innerText = name;
+    document.getElementById("moduleTitle").innerText = name;
+    document.getElementById("moduleIcon").setAttribute("data-lucide", icon);
+    const isRiskAnalytics = name === "Risk Analytics";
+    const isUEBA = name === "UEBA";
+    document.getElementById("riskAnalyticsContent").hidden = !isRiskAnalytics;
+    document.getElementById("uebaContent").hidden = !isUEBA;
+    document.getElementById("modulePlaceholder").hidden = isRiskAnalytics || isUEBA;
+    document.getElementById("placeholderTitle").innerText = name;
+    document.getElementById("placeholderIcon").setAttribute("data-lucide", icon);
+    lucide.createIcons();
+
+    if (isRiskAnalytics) {
+        loadRiskAnalytics();
+    }
+    if (isUEBA) {
+        loadUEBA();
+    }
+}
+
+/* ================= START ================= */
+document.addEventListener("DOMContentLoaded", async () => {
+    lucide.createIcons();
+    await resolveApiBaseUrl();
+    console.log("AepttasShield API base URL:", API_BASE_URL);
+    loadDashboardData();
+});
+</script>
+
+</body>
+</html>

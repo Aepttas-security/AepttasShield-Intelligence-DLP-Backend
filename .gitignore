@@ -1,0 +1,105 @@
+# Environment & Secrets
+
+.env
+.env.*
+!.env.example
+
+# Secret / credential files
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials.json
+service-account.json
+secrets.json
+
+
+# Python
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+
+# Virtual Environments
+
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+
+# FastAPI / Uvicorn
+
+*.log
+logs/
+*.pid
+
+
+# PostgreSQL / Database Dumps
+
+*.sql
+*.sql.gz
+*.dump
+*.backup
+*.bak
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+
+# VS Code
+
+.vscode/
+!.vscode/extensions.json
+
+
+# Jupyter Notebook
+
+.ipynb_checkpoints/
+
+
+# Testing / Coverage
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+
+# Type Checking / Linters
+
+.mypy_cache/
+.pyre/
+.ruff_cache/
+
+
+# OS Generated Files
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# Temporary Files
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
