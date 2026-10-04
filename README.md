@@ -134,7 +134,7 @@ The Enterprise DLP dashboard provides visibility into:
                          └─────────────────────────┘
 
 
-🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 | Component               | Technology            |
 | ----------------------- | --------------------- |
@@ -151,8 +151,9 @@ The Enterprise DLP dashboard provides visibility into:
 | Development Environment | Visual Studio Code    |
 
 
-📂 Project Structure
+## 📂 Project Structure
 
+```text
 dlpriskanalytics/
 │
 ├── app/
@@ -168,97 +169,144 @@ dlpriskanalytics/
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
 
-The exact files inside each module may vary depending on the current implementation.
+> The exact files inside each module may vary depending on the current implementation.
 
-⚙️ Installation
+---
 
-1. Clone the Repository
+## ⚙️ Installation
 
+### 1. Clone the Repository
+
+```bash
 git clone <repository-url>
+```
 
 Navigate into the project:
 
+```bash
 cd dlpriskanalytics
+```
 
-2. Create a Virtual Environment
+### 2. Create a Virtual Environment
 
-Windows:
+#### Windows
 
+```bash
 python -m venv venv
+```
 
 Activate it:
 
+```bash
 venv\Scripts\activate
+```
 
-Linux/macOS:
+#### Linux / macOS
 
+```bash
 python3 -m venv venv
+```
+
+Activate it:
+
+```bash
 source venv/bin/activate
+```
 
-3. Install Dependencies
+### 3. Install Dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
-🔐 Environment Variables
+---
 
-Create a .env file in the project root.
+## 🔐 Environment Variables
+
+Create a `.env` file in the project root.
 
 Example:
 
+```env
 DATABASE_URL=your_postgresql_connection_string
+```
 
 For Supabase PostgreSQL, use the PostgreSQL connection string provided by the Supabase project.
 
-Security
+### Security
 
-Do not commit .env to GitHub.
+Do not commit `.env` to GitHub.
 
 Never expose:
 
-Database passwords
-API keys
-Secret keys
-Authentication credentials
-Production connection strings
+* Database passwords
+* API keys
+* Secret keys
+* Authentication credentials
+* Production connection strings
 
-A .env.example file can be used instead:
+A `.env.example` file can be used instead:
 
-DATABASE_URL= your_postgresql_connection_string
+```env
+DATABASE_URL=your_postgresql_connection_string
+```
 
-▶️ Running the Server
+---
+
+## ▶️ Running the Server
 
 Activate the virtual environment:
 
+```bash
 venv\Scripts\activate
+```
 
 Start the FastAPI server:
 
+```bash
 uvicorn app.main:app --reload
+```
 
-If main.py is being run from the current application directory, use:
+If `main.py` is being run from the current application directory, use:
 
+```bash
 uvicorn main:app --reload
+```
 
 The API will normally be available at:
 
 http://127.0.0.1:8000
 
-📖 API Documentation
+---
+
+# 📖 API Documentation
 
 FastAPI automatically provides interactive API documentation.
 
-Swagger UI
+### Swagger UI
 
 http://127.0.0.1:8000/docs
-ReDoc
+
+### ReDoc
+
 http://127.0.0.1:8000/redoc
 
-Swagger UI can be used to test the backend APIs and inspect request and response schemas.
+Swagger UI can be used to:
 
-🔌 REST APIs
+* Test backend APIs
+* Inspect request schemas
+* Inspect response schemas
+* Validate API behavior
+* Test risk calculations
+* Verify API responses
 
-Risk Analytics APIs
+---
+
+## 🔌 REST APIs
+
+### Risk Analytics APIs
 
 | Method | Endpoint                                | Description                                |
 | ------ | --------------------------------------- | ------------------------------------------ |
@@ -274,30 +322,33 @@ Risk Analytics APIs
 | GET    | `/risk/debug`                           | Retrieve risk/debug information            |
 | GET    | `/risk/test-loaded`                     | Verify backend/model loading               |
 
+> Additional APIs may be available depending on the current implementation.
 
-Additional APIs may be available depending on the current implementation.
+---
 
-📊 Risk Analytics
+## 📊 Risk Analytics
 
 Risk Analytics evaluates DLP activities using multiple risk dimensions.
 
-Risk Factors
+### Risk Factors
 
 The risk model considers factors including:
 
-Data Sensitivity
-Destination Trust
-User Risk
-Device Trust
-Behaviour Anomaly
-Transfer Volume
-Channel Risk
-Severity
-Frequency
+1. Data Sensitivity
+2. Destination Trust
+3. User Risk
+4. Device Trust
+5. Behaviour Anomaly
+6. Transfer Volume
+7. Channel Risk
+8. Severity
+9. Frequency
 
 Each factor contributes to the overall risk evaluation.
 
-🎯 Adaptive Risk Model
+---
+
+## 🎯 Adaptive Risk Model
 
 The configured adaptive risk model uses the following ranges:
 
@@ -309,71 +360,80 @@ The configured adaptive risk model uses the following ranges:
 |      60–79 | Block / Adaptive Challenge            |
 |     80–100 | Block + Incident + Automated Response |
 
-
 The final enforcement action is determined by the backend risk evaluation and configured DLP rules.
 
-🧠 User and Entity Behavior Analytics
+---
 
-UEBA analyzes user activities against established behavioural baselines.
+## 🧠 User and Entity Behavior Analytics
 
-The purpose of UEBA is to identify activities that deviate from normal user behaviour and increase the associated risk when suspicious behaviour is detected.
+UEBA analyzes user activities against established behavioral baselines.
 
-👤 Behaviour Profiles
+The purpose of UEBA is to identify activities that deviate from normal user behavior and increase the associated risk when suspicious behavior is detected.
+
+---
+
+### 👤 Behaviour Profiles
 
 Behaviour profiles can contain:
 
-User
-Department
-Average transfer volume
-Average events per day
-Normal start hour
-Normal end hour
-Common channel
-Common destination
-Common data classification
-Baseline event count
-Last profile update
+| Attribute                  | Description                                 |
+| -------------------------- | ------------------------------------------- |
+| User                       | User associated with the activity           |
+| Department                 | User's organizational department            |
+| Average Transfer Volume    | Normal transfer volume                      |
+| Average Events per Day     | Typical number of daily events              |
+| Normal Start Hour          | Typical beginning of working activity       |
+| Normal End Hour            | Typical end of working activity             |
+| Common Channel             | Frequently used data transfer channel       |
+| Common Destination         | Frequently used destination                 |
+| Common Data Classification | Common classification of accessed data      |
+| Baseline Event Count       | Number of events used for baseline creation |
+| Last Profile Update        | Timestamp of the latest profile update      |
 
-These values are used to establish a behavioural baseline for anomaly detection.
+These values are used to establish a behavioral baseline for anomaly detection.
 
-🚨 UEBA Detection Scenarios
+---
 
-Bulk Export
+## 🚨 UEBA Detection Scenarios
+
+### 1. Bulk Export
 
 Detects unusually large data transfers, especially when combined with sensitive data and an external destination.
 
 The configured response can include:
 
-Critical Risk
-Block
-Incident Generation
-After-Hours Activity
+* Critical Risk
+* Block
+* Incident Generation
+
+### 2. After-Hours Activity
 
 Detects sensitive data activity outside the user's established normal working hours.
 
 The configured response can include:
 
-Adaptive Challenge
-or
-Block
-Role Mismatch
+* Adaptive Challenge
+* Block
 
-Detects activity that is inconsistent with the user's normal role or behaviour pattern.
+### 3. Role Mismatch
+
+Detects activity that is inconsistent with the user's normal role or behavior pattern.
 
 Such activity can increase the user's risk and may require justification.
 
-Repeated Attempts
+### 4. Repeated Attempts
 
 Detects repeated transfer attempts, particularly when previous attempts were blocked.
 
 The system can escalate the associated severity and correlate repeated activities.
 
-Channel Chaining
+### 5. Channel Chaining
 
 Detects suspicious sequences involving multiple channels.
 
 Example:
 
+```text
 Copy
   ↓
 Archive
@@ -381,183 +441,213 @@ Archive
 USB
   ↓
 Cloud Upload
+```
 
 Related activities can be correlated into a single security incident.
 
-🔎 Behaviour Anomaly Severity
+---
+
+## 🔎 Behaviour Anomaly Severity
 
 UEBA anomaly scores are evaluated using configured thresholds.
 
 Supported anomaly severity levels include:
 
-LOW
-MEDIUM
-HIGH
-CRITICAL
+| Severity | Description                          |
+| -------- | ------------------------------------ |
+| LOW      | Minor behavioral deviation           |
+| MEDIUM   | Moderate behavioral deviation        |
+| HIGH     | Significant suspicious activity      |
+| CRITICAL | Severe or highly suspicious activity |
 
 The final severity is determined by the configured anomaly scoring logic.
 
-🚨 Risk Alerts
+---
+
+## 🚨 Risk Alerts
 
 Risk alerts are generated when configured risk thresholds are reached.
 
 Alert information can include:
 
-User
-Risk score
-Risk level
-Alert type
-Risk reason
-Timestamp
-Related event
-Related incident
+* User
+* Risk Score
+* Risk Level
+* Alert Type
+* Risk Reason
+* Timestamp
+* Related Event
+* Related Incident
 
-🛡️ Incident Management
+---
+
+## 🛡️ Incident Management
 
 Security incidents can be generated when activity meets configured risk or UEBA conditions.
 
 Incident information can include:
 
-Incident ID
-User
-Device
-Event
-Risk score
-Risk level
-Detection reason
-Incident status
-Timestamp
-Related alerts
+* Incident ID
+* User
+* Device
+* Event
+* Risk Score
+* Risk Level
+* Detection Reason
+* Incident Status
+* Timestamp
+* Related Alerts
 
-This allows suspicious activities to be investigated and correlated.
+This allows security teams to investigate and correlate suspicious activities.
 
-🗄️ Database Schema
+---
+
+## 🗄️ Database Schema
 
 PostgreSQL is used for persistent storage.
 
-Major entities include:
+### Major Entities
 
-Users
+#### Users
 
 Stores user identity and organizational information.
 
-Devices
+#### Devices
 
 Stores device information associated with users.
 
-Policies
+#### Policies
 
 Stores DLP policy information.
 
-DLP Events
+#### DLP Events
 
 Stores monitored data transfer activities.
 
 DLP event information can include:
 
-User
-Device
-Policy
-Event type
-Data classification
-Channel
-Destination
-Volume
-Severity
-Action
-Timestamp
-Risk Scores
+* User
+* Device
+* Policy
+* Event Type
+* Data Classification
+* Channel
+* Destination
+* Volume
+* Severity
+* Action
+* Timestamp
+
+#### Risk Scores
 
 Stores calculated risk information including:
 
-User
-Department
-Data type
-Classification
-Detection rule
-Action
-Channel
-Destination
-Severity
-Data sensitivity score
-Destination trust score
-User risk score
-Device trust score
-Behaviour anomaly score
-Transfer volume score
-Channel risk score
-Severity score
-Frequency risk score
-Total risk score
-Risk level
-Risk reason
-Timestamp
-Risk Factors
+* User
+* Department
+* Data Type
+* Classification
+* Detection Rule
+* Action
+* Channel
+* Destination
+* Severity
+* Data Sensitivity Score
+* Destination Trust Score
+* User Risk Score
+* Device Trust Score
+* Behaviour Anomaly Score
+* Transfer Volume Score
+* Channel Risk Score
+* Severity Score
+* Frequency Risk Score
+* Total Risk Score
+* Risk Level
+* Risk Reason
+* Timestamp
+
+#### Risk Factors
 
 Stores individual risk factor information used during risk analysis.
 
-Risk Alerts
+#### Risk Alerts
 
 Stores generated risk alerts.
 
-Incidents
+#### Incidents
 
 Stores security incidents associated with DLP activities.
 
-Behaviour Profiles
+#### Behaviour Profiles
 
-Stores normal behavioural baselines for users.
+Stores normal behavioral baselines for users.
 
-Behaviour Anomalies
+#### Behaviour Anomalies
 
 Stores detected deviations from normal user behaviour.
 
-🔗 Database Relationships
+---
 
+## 🔗 Database Relationships
+
+```text
 User
- │
- ├── Devices
- │
- ├── DLP Events
- │       │
- │       ├── Policy
- │       ├── Device
- │       └── Risk Score
- │
- ├── Risk Scores
- │
- ├── Risk Alerts
- │
- └── Behaviour Profile
-          │
-          └── Behaviour Anomalies
+│
+├── Devices
+│
+├── DLP Events
+│   │
+│   ├── Policy
+│   ├── Device
+│   └── Risk Score
+│
+├── Risk Scores
+│
+├── Risk Alerts
+│
+└── Behaviour Profile
+    │
+    └── Behaviour Anomalies
 
 DLP Events
-     │
-     └── Incidents
+│
+└── Incidents
+```
 
-The relationships are implemented using SQLAlchemy models and PostgreSQL foreign keys.
+The relationships are implemented using **SQLAlchemy models** and **PostgreSQL foreign keys**.
 
-🤖 ML / AI Components
+---
 
-The current Risk Analytics and UEBA implementation primarily uses rule-based and statistical behaviour analysis.
+## 🤖 ML / AI Components
 
-UEBA uses behavioural baselines and configured detection logic to identify anomalous activities.
+The current Risk Analytics and UEBA implementation primarily uses:
 
-The current implementation does not require a separately trained machine-learning model for the core Risk Analytics and UEBA functionality.
+* Rule-based analysis
+* Statistical behavioral analysis
+* Behavioral baselines
+* Configured detection logic
+* Risk scoring
+
+UEBA uses behavioral baselines and configured detection logic to identify anomalous activities.
+
+> The current implementation does not require a separately trained machine-learning model for the core Risk Analytics and UEBA functionality.
+
+### Future ML/AI Enhancements
 
 Future versions may incorporate machine-learning techniques for:
 
-Advanced anomaly detection
-Adaptive behavioural modelling
-User risk prediction
-Dynamic baseline generation
-Context-aware risk scoring
+* Advanced anomaly detection
+* Adaptive behavioral modelling
+* User risk prediction
+* Dynamic baseline generation
+* Context-aware risk scoring
 
-🖥️ Dashboard Integration
+---
+
+## 🖥️ Dashboard Integration
 
 The dashboard acts as the presentation layer for the backend.
 
+```text
 Dashboard
     │
     │ REST API
@@ -569,177 +659,203 @@ FastAPI Backend
     ├── Alerts
     ├── Incidents
     └── PostgreSQL
+```
 
 The dashboard consumes information from backend APIs.
 
-Dashboard components can display:
+### Dashboard Components
 
-Security posture
-Risk distribution
-Risk scores
-Risk levels
-Risk actions
-Risk factors
-High-risk users
-Department risk
-Risk alerts
-Incidents
-Behaviour profiles
-Behaviour anomalies
-UEBA activity
+The dashboard can display:
 
-🔍 Explainable Risk
+* Security Posture
+* Risk Distribution
+* Risk Scores
+* Risk Levels
+* Risk Actions
+* Risk Factors
+* High-Risk Users
+* Department Risk
+* Risk Alerts
+* Incidents
+* Behaviour Profiles
+* Behaviour Anomalies
+* UEBA Activity
+
+---
+
+## 🔍 Explainable Risk
 
 Risk decisions are designed to be understandable and traceable.
 
 Risk information can include:
 
-Risk score
-Risk level
-Enforcement action
-User
-Device
-Data classification
-Channel
-Destination
-Severity
-Detection rule
-Individual risk factors
-Risk reason
-Timestamp
-Related event
-Related incident
+* Risk Score
+* Risk Level
+* Enforcement Action
+* User
+* Device
+* Data Classification
+* Channel
+* Destination
+* Severity
+* Detection Rule
+* Individual Risk Factors
+* Risk Reason
+* Timestamp
+* Related Event
+* Related Incident
 
-This provides security teams with context for understanding a risk decision.
+This provides security teams with context for understanding why a particular risk decision was made.
 
-📝 Audit and Traceability
+---
+
+## 📝 Audit and Traceability
 
 Risk and enforcement decisions can be traced to the underlying DLP activity.
 
 Relevant evidence can include:
 
-Event ID
-User
-Device
-Timestamp
-Data classification
-Channel
-Destination
-Detection rule
-Risk score
-Risk factors
-Action
-Alert
-Incident
+* Event ID
+* User
+* Device
+* Timestamp
+* Data Classification
+* Channel
+* Destination
+* Detection Rule
+* Risk Score
+* Risk Factors
+* Action
+* Alert
+* Incident
 
 This supports security investigation and audit requirements.
 
-🔒 Security Considerations
+---
 
-The following practices should be followed:
+## 🔒 Security Considerations
 
-Never commit .env files.
-Never expose database credentials.
-Never hard-code production passwords.
-Use secure database connections where required.
-Restrict database credentials according to the deployment environment.
-Validate API inputs.
-Apply authentication and authorization in production.
-Use HTTPS/TLS in production.
-Keep secrets outside source control.
-Avoid exposing sensitive information in logs.
+The following security practices should be followed:
 
-🧪 Testing
+* Never commit `.env` files.
+* Never expose database credentials.
+* Never hard-code production passwords.
+* Use secure database connections where required.
+* Restrict database credentials according to the deployment environment.
+* Validate API inputs.
+* Apply authentication and authorization in production.
+* Use HTTPS/TLS in production.
+* Keep secrets outside source control.
+* Avoid exposing sensitive information in logs.
 
-The backend can be tested using:
+---
 
-Swagger
+## 🧪 Testing
+
+The backend can be tested using Swagger, database validation, Risk Analytics testing, UEBA testing, and dashboard testing.
+
+### Swagger Testing
+
+Open:
+
 http://127.0.0.1:8000/docs
-Database Testing
+
+### Database Testing
 
 Validate:
 
-Database connectivity
-Table creation
-DLP events
-Risk scores
-Risk factors
-Alerts
-Incidents
-Behaviour profiles
-Behaviour anomalies
-Risk Analytics Testing
+* Database connectivity
+* Table creation
+* DLP events
+* Risk scores
+* Risk factors
+* Alerts
+* Incidents
+* Behaviour profiles
+* Behaviour anomalies
+
+### Risk Analytics Testing
 
 Validate:
 
-Risk calculation
-Risk factor values
-Risk classification
-Enforcement action
-Alert generation
-Incident generation
-High-risk user detection
-UEBA Testing
+* Risk calculation
+* Risk factor values
+* Risk classification
+* Enforcement action
+* Alert generation
+* Incident generation
+* High-risk user detection
+
+### UEBA Testing
 
 Validate:
 
-Behaviour profile generation
-Baseline values
-After-hours detection
-Bulk activity detection
-Role mismatch detection
-Repeated activity detection
-Channel chaining
-Behaviour anomaly severity
-UEBA alerts
-Dashboard Testing
+* Behaviour profile generation
+* Baseline values
+* After-hours detection
+* Bulk activity detection
+* Role mismatch detection
+* Repeated activity detection
+* Channel chaining
+* Behaviour anomaly severity
+* UEBA alerts
+
+### Dashboard Testing
 
 Validate:
 
-Dashboard data loading
-API responses
-Risk values against backend values
-UEBA values against backend values
-Chart rendering
-Alert display
-Incident display
-No sensitive credentials exposed
+* Dashboard data loading
+* API responses
+* Risk values against backend values
+* UEBA values against backend values
+* Chart rendering
+* Alert display
+* Incident display
+* No sensitive credentials exposed
 
-🔄 Project Workflow
+---
 
-DLP Activity
-     │
-     ▼
-DLP Event
-     │
-     ├───────────────────┐
-     ▼                   ▼
-Risk Analytics          UEBA
-     │                   │
-     ▼                   ▼
-Risk Factors        Behaviour Baseline
-     │                   │
-     ▼                   ▼
-Risk Score          Anomaly Detection
-     │                   │
-     └─────────┬─────────┘
-               ▼
-        Risk Evaluation
-               │
-               ▼
-       Enforcement Action
-               │
-         ┌─────┴─────┐
-         │           │
-         ▼           ▼
-       Alert       Incident
-         │           │
-         └─────┬─────┘
-               ▼
-        DLP Dashboard
+## 🔄 Project Workflow
 
-📈 Risk Evaluation Workflow
+```text
+                    DLP Activity
+                         │
+                         ▼
+                     DLP Event
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+              ▼                     ▼
+       Risk Analytics             UEBA
+              │                     │
+              ▼                     ▼
+        Risk Factors       Behaviour Baseline
+              │                     │
+              ▼                     ▼
+         Risk Score        Anomaly Detection
+              │                     │
+              └──────────┬──────────┘
+                         ▼
+                  Risk Evaluation
+                         │
+                         ▼
+                 Enforcement Action
+                         │
+                  ┌──────┴──────┐
+                  │             │
+                  ▼             ▼
+                Alert        Incident
+                  │             │
+                  └──────┬──────┘
+                         ▼
+                  DLP Dashboard
+```
 
+---
+
+## 📈 Risk Evaluation Workflow
+
+```text
 DLP Event
     ↓
 Identify User and Device
@@ -765,9 +881,13 @@ Determine Enforcement Action
 Generate Alert / Incident when required
     ↓
 Display Results in Dashboard
+```
 
-👤 UEBA Workflow
+---
 
+## 👤 UEBA Workflow
+
+```text
 User Activity
       ↓
 Collect DLP Events
@@ -789,110 +909,138 @@ Update Risk Evaluation
 Generate UEBA Alert / Incident
       ↓
 Display Results in Dashboard
+```
 
-📋 Rulebook Alignment
+---
+
+## 📋 Rulebook Alignment
 
 The current Risk Analytics and UEBA implementation is aligned with the configured AepttasShield Enterprise DLP rulebook for:
 
-Adaptive risk scoring
-Risk-based enforcement
-Risk factor evaluation
-UEBA detection scenarios
-Behaviour anomaly detection
-Risk alerts
-Incident handling
-Explainable risk information
-Audit traceability
+* Adaptive risk scoring
+* Risk-based enforcement
+* Risk factor evaluation
+* UEBA detection scenarios
+* Behaviour anomaly detection
+* Risk alerts
+* Incident handling
+* Explainable risk information
+* Audit traceability
 
-Configured adaptive risk handling:
+### Configured Adaptive Risk Handling
 
-0–19    → Allow / Monitor
-20–39   → Warn
-40–59   → Justify
-60–79   → Block / Adaptive Challenge
-80–100  → Block + Incident + Automated Response
+| Risk Score | Action                                |
+| ---------: | ------------------------------------- |
+|       0–19 | Allow / Monitor                       |
+|      20–39 | Warn                                  |
+|      40–59 | Justify                               |
+|      60–79 | Block / Adaptive Challenge            |
+|     80–100 | Block + Incident + Automated Response |
 
-📊 Project Status
+---
+
+## 📊 Project Status
 
 The current implementation includes:
 
-Risk Analytics backend
-Risk scoring
-Risk factor analysis
-Risk alerts
-Incident handling
-High-risk user analysis
-User behaviour profiling
-UEBA anomaly detection
-UEBA API integration
-PostgreSQL integration
-Dashboard integration
-Swagger/OpenAPI documentation
+* ✅ Risk Analytics backend
+* ✅ Risk scoring
+* ✅ Risk factor analysis
+* ✅ Risk alerts
+* ✅ Incident handling
+* ✅ High-risk user analysis
+* ✅ User behaviour profiling
+* ✅ UEBA anomaly detection
+* ✅ UEBA API integration
+* ✅ PostgreSQL integration
+* ✅ Dashboard integration
+* ✅ Swagger/OpenAPI documentation
 
 Risk Analytics and UEBA have been reviewed against the configured AepttasShield Enterprise DLP rulebook.
 
-🔮 Future Enhancements
+---
+
+## 🔮 Future Enhancements
 
 Potential future enhancements include:
 
-Advanced machine-learning based anomaly detection
-Adaptive user risk modelling
-Automated response orchestration
-Real-time event streaming
-Advanced cross-channel correlation
-Extended audit reporting
-Role-based access control
-Authentication and authorization
-Threat intelligence integration
-Automated compliance reporting
-Production monitoring and observability
+* Advanced machine-learning-based anomaly detection
+* Adaptive user risk modelling
+* Automated response orchestration
+* Real-time event streaming
+* Advanced cross-channel correlation
+* Extended audit reporting
+* Role-based access control
+* Authentication and authorization
+* Threat intelligence integration
+* Automated compliance reporting
+* Production monitoring and observability
 
-📦 Development
+---
 
-AepttasShield Enterprise DLP is developed as part of the AepttasShield Enterprise Security Platform.
+## 📦 Development
+
+AepttasShield Enterprise DLP is developed as part of the **AepttasShield Enterprise Security Platform**.
 
 The backend follows a modular architecture that separates:
 
-API layer
-Database models
-Schemas
-Core configuration
-Business services
-Risk Analytics
-UEBA
-Dashboard integration
+* API Layer
+* Database Models
+* Schemas
+* Core Configuration
+* Business Services
+* Risk Analytics
+* UEBA
+* Dashboard Integration
 
 This allows individual modules to be developed, tested, and maintained independently.
 
+---
 
-📞 Quick Start
+## 📞 Quick Start
 
-# Create virtual environment
+### Create Virtual Environment
+
+```bash
 python -m venv venv
+```
 
-# Activate environment - Windows
+### Activate Environment — Windows
+
+```bash
 venv\Scripts\activate
+```
 
-# Install dependencies
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-# Start FastAPI
+### Start FastAPI
+
+```bash
 uvicorn app.main:app --reload
+```
 
 Then open:
 
-Application:
+**Application**
+
 http://127.0.0.1:8000
 
-Swagger:
+**Swagger**
+
 http://127.0.0.1:8000/docs
 
-ReDoc:
+**ReDoc**
+
 http://127.0.0.1:8000/redoc
 
-📄 License
+---
 
-This project is intended for internal development and authorized use within the AepttasShield Enterprise Security Platform.
+## 📄 License
+
+This project is intended for internal development and authorized use within the **AepttasShield Enterprise Security Platform**.
 
 Unauthorized distribution, modification, or deployment should follow applicable organizational policies and access controls.
-
